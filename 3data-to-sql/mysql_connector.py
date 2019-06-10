@@ -26,6 +26,15 @@ csvFileName = 'tablet.csv'
 tablet = pd.read_csv(os.path.join(csvFileName))
 tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
 
+#exporting Keywords
+csvFileName = 'keywords.csv'
+tablet = pd.read_csv(os.path.join(csvFileName))
+tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
+
+#exporting Urls
+csvFileName = 'urls.csv'
+tablet = pd.read_csv(os.path.join(csvFileName))
+tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
 
 
 

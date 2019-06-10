@@ -1,0 +1,181 @@
+//load our app server using express
+const express = require('express')
+const app = express()
+const morgan = require('morgan')
+const mysql = require('mysql')
+const cors = require('cors')
+const path = require('path')
+
+app.use(cors())
+
+// Mobile API Call
+app.get('/mobile/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM mobile", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Desktop API call
+app.get('/desktop/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM desktop", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Tablet API Call
+
+app.get('/tablet/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM tablet", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top Keywords API Call
+app.get('/keywords/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM keywords", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top URLs API Call
+app.get('/urls/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM urls", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Get specific ID 
+
+app.get('/mobile/:id' ,(req, res) => {
+	console.log("fetching user with ID" + req.params.id)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	const id = req.params.id
+	const queryString = "SELECT * FROM mobile WHERE id = ?"
+	connection.query(queryString, [id], (err,rows,fields) => {
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+
+//res.end()
+})
+
+
+app.get("/",(req, res) => {
+	console.log("responding to root route")
+	res.sendFile(path.join(__dirname + '/index.html'))
+} )
+
+app.get("/users", (req,res) => {
+	var user1 = {firstName: "Konrad" , lastName: "Burchardt"}
+	const user2 = {firstName: "Margi" , lastName: "Sant"}
+	res.json([user1, user2])
+})
+
+//localhost:3003
+app.listen(3003, () => {
+	console.log("Server is up and listening on 3003")
+})
+

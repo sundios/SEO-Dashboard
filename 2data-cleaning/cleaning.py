@@ -9,6 +9,10 @@ import glob
 #files top open
 files = sorted(glob.glob('_2019*.csv'))
 
+
+#Use this to test the script part by part
+#df = pd.read_csv('_20190102.csv',index_col=False)
+
 #variables where I will store the data
 mobile_dataset = []
 desktop_dataset= []
@@ -96,11 +100,16 @@ mobile = pd.concat(mobile_dataset)
 desktop = pd.concat(desktop_dataset)
 tablet = pd.concat(tablet_dataset)
 
+#reseting index so it counts and we have an id for mysql
+mobile.reset_index(drop=True, inplace=True) 
+desktop.reset_index(drop=True, inplace=True) 
+tablet.reset_index(drop=True, inplace=True) 
+
 #exporting to CSV
 
-mobile.to_csv(r'mobile.csv')
-desktop.to_csv(r'desktop.csv')
-tablet.to_csv(r'tablet.csv')
+mobile.to_csv(r'mobile.csv', index_label= 'id')
+desktop.to_csv(r'desktop.csv',index_label= 'id')
+tablet.to_csv(r'tablet.csv', index_label= 'id')
 
 
 
