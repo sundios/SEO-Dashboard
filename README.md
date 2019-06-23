@@ -1,6 +1,10 @@
 # SEO ETL + React Dashboard
 
-> This is an ETL project that is focused on having a complete SEO dashboard for reporting purposes. This is the first version of this project and only includes basic data from Google. I'm working on including more metrics like Backlink profiles, Daily rankings for specific keywords, Search volumes and more.
+> This is an ETL project that is focused on having a complete SEO dashboard for reporting purposes. This is the first version of this project and only includes basic data from Google. I'm working on including more metrics like Backlink profiles, Daily rankings for specific keywo'rds, Search volumes and more.
+<div style="margin:0 auto 0;>
+  
+![alt text](https://panoply.io/uploads/versions/diagram4---x----750-328x---.jpg)
+</div>
 
 ## Task and Goal
 The task for this project is to create an ETL pipeline using Google search organic traffic and load the data in a user-friendly dashboard. Our ETL process performs data cleaning during the extraction process and loads significant data into a data warehouse. Our main goal for this project is by having this pipeline we will be able to have the data in one place and make it easier for businesses stakeholders to access this data, analyze it and discover different business insights.
