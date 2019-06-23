@@ -14,7 +14,7 @@ We will be working with Monthly Google search organic traffic from the domain ht
 
 ## Approach and Methods used
 This project is composed by 5 steps.
-1. Extraction: Extract the Google search data using the Google search API. Our data will be saved in CSV files. This is folder **0Google Top Kws&urls** and **1Google API Day to day.
+1. Extraction: Extract the Google search data using the Google search API. Our data will be saved in CSV files. This is folder **0Google Top Kws&urls** and **1Google API Day to day**.
 2. Transform: Transform the day to day data into 3 monthly data sets. A mobile data set, a desktop and a tablet. The Keywords and URLs are ready to go. This is in folder **2data-cleaning**. 
 3. **Load**: Load the data to the data warehouse. We will be using a MySQL database. This is in folder **3data-to-sql**.
 4. Load Build a REST API that will parse all of our MySQL tables into JSON. This is in folder **4RESTapi**.
