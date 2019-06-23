@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Keiphone.com REST API HOME PAGE</title>
+    <title>tuves.clREST API HOME PAGE</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -44,7 +44,7 @@
 
       <div class="jumbotron">
         <h1 class="display-3">NodeJS REST API </h1>
-        <p class="lead">REST API with ExpressJS in NodeJS. This API fetches organic data from a MySQL database. The data is from <a href="https://www.keiphone.com/"> Keiphone</a>. This page is and index with the path to help the use of the API.  </p>
+        <p class="lead">REST API with ExpressJS in NodeJS. This API fetches organic data from a MySQL database. The data is from <a href="https://www.tuves.cl/"> Tuves</a>. This page is a index with example and paths to help the use of the API.</p>
   
       </div>
 
@@ -116,7 +116,11 @@ document.getElementById("demo").innerHTML =
                    </li>
                  </ul>
                    <p> <strong> Example</strong></p>
-                      <div class="pre"> <code> [{TBD}
+                      <div class="pre"> <code> [{Keyword: "b'tuves'",
+Clicks: 269,
+Impressions: 354,
+CTR: 0.759887005649718,
+Position: 1}]
                         ]</code> </div>
            <a href="/desktop"> Go to path</a>
 
@@ -126,12 +130,18 @@ document.getElementById("demo").innerHTML =
            <p><strong>Endpoints:</strong> </p>
                 <ul>
                   <li>
-                    <code> '/Keywords/' </code> -- Get all data
+                    <code> '/URLs/' </code> -- Get all data
                    </li>
                  </ul>
                    <p> <strong> Example</strong></p>
-                      <div class="pre"> <code> [{TBD}
-                        ]</code> </div>
+                      <div class="pre"> <code> 
+                        {
+Url: "b'https://www.tuves.cl/'",
+Clicks: 544,
+Impressions: 1276,
+CTR: 0.426332288401254,
+Position: 4.3871473354232
+}</code> </div>
            <a href="/desktop"> Go to path</a>
 
           <h4>Random</h4>

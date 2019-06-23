@@ -74,15 +74,15 @@ def main(argv):
   # response = execute_request(service, flags.property_uri, request)
   # print_table(response, 'Totals')
 
-  # Get top 10 queries for the date range, sorted by click count, descending.
-  request = {
-      'startDate': flags.start_date,
-      'endDate': flags.end_date,
-      'dimensions': ['query'],
-      'rowLimit': 10
-  }
-  response = execute_request(service, flags.property_uri, request)
-  print_table(response, 'Top Queries')
+  # # Get top 10 queries for the date range, sorted by click count, descending.
+  # request = {
+  #     'startDate': flags.start_date,
+  #     'endDate': flags.end_date,
+  #     'dimensions': ['query'],
+  #     'rowLimit': 1500
+  # }
+  # response = execute_request(service, flags.property_uri, request)
+  # print_table(response, 'Top Queries')
 
   # # Get top 11-20 mobile queries for the date range, sorted by click count, descending.
   # request = {
@@ -102,14 +102,21 @@ def main(argv):
   # print_table(response, 'Top 11-20 Mobile Queries')
 
   # Get top 10 pages for the date range, sorted by click count, descending.
-  # request = {
-  #     'startDate': flags.start_date,
-  #     'endDate': flags.end_date,
-  #     'dimensions': ['page'],
-  #     'rowLimit': 10
-  # }
-  # response = execute_request(service, flags.property_uri, request)
-  # print_table(response, 'Top Pages')
+  request = {
+      'startDate': flags.start_date,
+      'endDate': flags.end_date,
+      'dimensions': ['page'],
+      'dimensionFilterGroups':[{
+          'filters':[{
+            'dimension':'device',
+            'expression':'mobile'
+          }]
+      }],
+
+      'rowLimit': 10
+  }
+  response = execute_request(service, flags.property_uri, request)
+  print_table(response, 'Top Pages')
 
   # # Get the top 10 queries in Chile, sorted by click count, descending.
   # request = {
@@ -186,19 +193,21 @@ def print_table(response, title):
     keys = ''
     # Keys are returned only if one or more dimensions are requested.
     
+    
     if 'keys' in row:
       keys = u','.join(row['keys']).encode('utf-8')
-    print (row_format.format(keys, row['clicks'], row['impressions'], row['ctr'], row['position']))
+    print (row_format.format(
+        keys, row['clicks'], row['impressions'], row['ctr'], row['position']))
 
     d.append(keys)
     d.append(row['clicks'])
     d.append(row['impressions'])
     d.append(row['ctr'])
     d.append(row['position'])
-    file ='keywords.csv'
+    file ='urls-desktop.csv'
     with open(file, 'w') as f:
       writer = csv.writer(f)
-      writer.writerow(['Keyword','Clicks','Impressions','CTR','Position'])
+      writer.writerow(['Url','Clicks','Impressions','CTR','Position'])
       writer.writerows(zip(d[0::5], d[1::5],d[2::5],d[3::5],d[4::5]))
 
 

@@ -106,6 +106,13 @@ def main(argv):
       'startDate': flags.start_date,
       'endDate': flags.end_date,
       'dimensions': ['page'],
+      'dimensionFilterGroups':[{
+          'filters':[{
+            'dimension':'device',
+            'expression':'mobile'
+          }]
+      }],
+
       'rowLimit': 10
   }
   response = execute_request(service, flags.property_uri, request)
@@ -197,7 +204,7 @@ def print_table(response, title):
     d.append(row['impressions'])
     d.append(row['ctr'])
     d.append(row['position'])
-    file ='urls.csv'
+    file ='urls-mobile.csv'
     with open(file, 'w') as f:
       writer = csv.writer(f)
       writer.writerow(['Url','Clicks','Impressions','CTR','Position'])

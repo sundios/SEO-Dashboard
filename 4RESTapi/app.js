@@ -88,7 +88,7 @@ app.get('/tablet/' ,(req, res) => {
 })
 
 //Top Keywords API Call
-app.get('/keywords/' ,(req, res) => {
+app.get('/keywords-mobile/' ,(req, res) => {
 	console.log("fetching user with ID" + req.params)
 
 	const connection = mysql.createConnection({
@@ -100,7 +100,7 @@ app.get('/keywords/' ,(req, res) => {
 	})	
 
 	
-	connection.query("SELECT * FROM keywords", (err,rows,fields) => {
+	connection.query("SELECT * FROM `keywords-mobile`", (err,rows,fields) => {
 		if (err) {
 			console.log("Failed to query for" + err)
 			res.sendStatu(500)
@@ -114,7 +114,7 @@ app.get('/keywords/' ,(req, res) => {
 })
 
 //Top URLs API Call
-app.get('/urls/' ,(req, res) => {
+app.get('/urls-mobile/' ,(req, res) => {
 	console.log("fetching user with ID" + req.params)
 
 	const connection = mysql.createConnection({
@@ -126,7 +126,7 @@ app.get('/urls/' ,(req, res) => {
 	})	
 
 	
-	connection.query("SELECT * FROM urls", (err,rows,fields) => {
+	connection.query("SELECT * FROM `urls-mobile`", (err,rows,fields) => {
 		if (err) {
 			console.log("Failed to query for" + err)
 			res.sendStatu(500)

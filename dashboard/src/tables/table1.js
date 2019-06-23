@@ -8,7 +8,7 @@ class table extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3003/Keywords")
+    axios.get("http://localhost:3003/Keywords-mobile")
       .then(response => {
         this.setState({
           todos: response.data

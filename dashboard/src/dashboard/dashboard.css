@@ -9,6 +9,14 @@
   vertical-align: text-bottom;
 }
 
+.logo { 
+    vertical-align: middle;
+    border-style: none;
+    width: 39%;
+    margin: 0 auto 0;
+    margin-left: 25%;
+  }
+
 /*
  * Sidebar
  */
