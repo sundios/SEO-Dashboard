@@ -27,5 +27,6 @@ This project is composed by 5 steps.
 ![alt text](http://www.kburchardt.com/images/dash2.png)
 
 ![alt text](http://www.kburchardt.com/images/dash3.png)
+![alt text](dash5.gif)
 
 
