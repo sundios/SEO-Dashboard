@@ -3,7 +3,7 @@
 > This is an ETL project that is focused on having a complete SEO dashboard for reportin purposes. This is the first version of the project and only inlcudes data from Google. Im working on including more metrics like Backlink profiles, Dayly rankings for specific keywords, Search volumes and more.
 
 ## Task and Goal
-The task for this project is to create an ETL pipeline using Google search organic traffic and load the data in a user friendly dashboard. ETL process performs data cleaning during extraction process and load significant data into data ware- house. Our main goal for this project is by having this pipeline we will be able to have the data in one place and make it easier for a businesses stakeholders to access this data, analyze it and discover different business insights.
+The task for this project is to create an ETL pipeline using Google search organic traffic and load the data in a user friendly dashboard. Our ETL process performs data cleaning during extraction process and load significant data into data ware- house. Our main goal for this project is by having this pipeline we will be able to have the data in one place and make it easier for businesses stakeholders to access this data, analyze it and discover different business insights.
 
 ## Data Background
 We will be working with Monthly Google search organic traffic from the domain https://www.tuves.cl. This data will be acquire by using the Google search API. We will use 9 different data sets of search traffic and they are the following:
@@ -14,11 +14,16 @@ We will be working with Monthly Google search organic traffic from the domain ht
 
 ## Approach and Methods used
 This project is composed by 5 steps.
-1. Extraction: Extract the Google search data using the Google search API. Our data will be saved in CSV files. This is folder **0Google Top Kws&urls** and **1Google API Day to day**.
-2. Transform: Transform the day to day data into 3 monthly data sets. A mobile data set, a desktop and a tablet. The Keywords and URLs are ready to go. This is in folder **2data-cleaning**. 
-3. **Load**: Load the data to the data warehouse. We will be using a MySQL database. This is in folder **3data-to-sql**.
-4. Load Build a REST API that will parse all of our MySQL tables into JSON. This is in folder **4RESTapi**.
-5. Analyze Create a dashboard where we will load our data and analyze it using tables and visualizations. This is in folder **dashboard**
+1. **Extraction**: Extract the Google search data using the Google search API. Our data will be saved in CSV files. This is folder **0Google Top Kws&urls** and **1Google API Day to day**. We are using the Google search console and a python script to perform this step.
+
+2. **Transform**: Transform the day to day data into 3 monthly data sets. A mobile data set, a desktop and a tablet. The Keywords and URLs are ready to go. This is in folder **2data-cleaning**. We are cleaning the data with a python script I created.
+
+3. **Load**: Load the data to the data warehouse. We will be using a MySQL database. This is in folder **3data-to-sql**. We are loading our data to mysql using a python script I created.
+
+4. Load Build a REST API that will parse all of our MySQL tables into JSON. This is in folder **4RESTapi**. We are using NodeJS and ExpressJS to build our restful API.
+
+
+5. Analyze Create a dashboard where we will load our data and analyze it using tables and visualizations. This is in folder **dashboard**. Reactjs, ChartJS, Axios and Reactstrap.
 
 ## Visualizations
 
