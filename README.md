@@ -1,6 +1,6 @@
 # SEO ETL + React Dashboard
 
-> This is an ETL project that is focused on having a complete SEO dashboard for reporting purposes. This is the first version of this project and only includes basic data from Google. I'm working on including more metrics like Backlink profiles, Daily rankings for specific keywo'rds, Search volumes and more.
+> This is an ETL project that is focused on having a complete SEO dashboard for reporting purposes. This is the first version of this project and only includes basic data from Google. I'm working on including more metrics like Backlink profiles, Daily rankings for specific keywords, Search volumes and more.
 
   
 ![alt text](https://panoply.io/uploads/versions/diagram4---x----750-328x---.jpg)
