@@ -20,10 +20,10 @@ This project is composed by 5 steps.
 
 3. **Load**: Load the data to the data warehouse. We will be using a MySQL database. This is in folder **3data-to-sql**. We are loading our data to mysql using a python script I created.
 
-4. Load Build a REST API that will parse all of our MySQL tables into JSON. This is in folder **4RESTapi**. We are using NodeJS and ExpressJS to build our restful API.
+4. **Load**: Build a REST API that will parse all of our MySQL tables into JSON. This is in folder **4RESTapi**. We are using NodeJS and ExpressJS to build our restful API.
 
 
-5. Analyze Create a dashboard where we will load our data and analyze it using tables and visualizations. This is in folder **dashboard**. Reactjs, ChartJS, Axios and Reactstrap.
+5. **Analyse**: Create a dashboard where we will load our data and analyze it using tables and visualizations. This is in folder **dashboard**. Reactjs, ChartJS, Axios and Reactstrap.
 
 ## Visualizations
 
