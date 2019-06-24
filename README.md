@@ -34,3 +34,7 @@ This project is composed by 5 steps.
 ![alt text](dash5.gif)
 
 
+## Full report
+
+You can find detailed information here --> [Full report](https://github.com/sundios/SEO-Dashboard/blob/master/Advance_Project_1_Konrad_Burchardt.pdf)
+
