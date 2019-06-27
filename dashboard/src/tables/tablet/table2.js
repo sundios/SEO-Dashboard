@@ -8,7 +8,7 @@ class table extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3003/urls-desktop")
+    axios.get("http://localhost:3003/urls-tablet")
       .then(response => {
         this.setState({
           todos: response.data

@@ -1,11 +1,15 @@
 import React , { Component } from 'react';
 import './dashboard.css';
-import Content from './Content';
-import Sidebar from './sidebar';
-import Nav from './nav';
+import MobileContent from './content/MobileContent';
+import DesktopContent from './content/DesktopContent';
+import TabletContent from './content/TabletContent';
+import Sidebar from './structure/sidebar';
+import Nav from './structure/nav';
 import {Row} from 'reactstrap'
 import logo from '../logo.svg';
 
+//Dashboard where we can include the component we want to show.
+// For example: <MobileContent/> will display mobile data.
 
  class dashboard extends Component {
   constructor(props) {
@@ -28,7 +32,9 @@ import logo from '../logo.svg';
       <div className="container-fluid">
       <Row>
         <Sidebar />
-        <Content/ >
+        <MobileContent />
+        <TabletContent />
+        <DesktopContent />
       </Row>
     </div>
   </div> 

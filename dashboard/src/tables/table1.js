@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import {Table} from 'reactstrap'
 
+
+// This file is only for example. 
+//Is not being used. 
+//Click the specific folder to see the file  that the graph is using.
+
+
 class table extends Component {
     state = {
     data : []
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3003/Keywords-mobile")
+    axios.get("http://localhost:3003/Keywords-desktop")
       .then(response => {
         this.setState({
           todos: response.data

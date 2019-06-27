@@ -3,6 +3,10 @@ import Chart from '../components/Chartbar';
 import axios from 'axios'
 import { Container, Row, Col } from 'reactstrap';
 
+// This file is only for example. 
+//Is not being used. 
+//Click the specific folder to see the file  that the graph is using.
+
 
 
 class App extends Component {

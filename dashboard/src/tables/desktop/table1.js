@@ -8,7 +8,7 @@ class table extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3003/urls-desktop")
+    axios.get("http://localhost:3003/Keywords-desktop")
       .then(response => {
         this.setState({
           todos: response.data
@@ -21,7 +21,7 @@ class table extends Component {
     console.log(todos)
     return (
       <div className="App">
-      <h3>Top 10 Driving URLs </h3>
+      <h3>Top 10 Driving Search Queries </h3>
       <header className="App-header">
           <Table>
             <thead>
@@ -37,7 +37,7 @@ class table extends Component {
             {todos.length ? 
               todos.map(todo => (
                 <tr >
-                  <td>{todo.Url}</td>
+                  <td>{todo.Keyword}</td>
                   <td>{todo.Clicks}</td>
                   <td>{todo.Impressions}</td>
                   <td>{todo.CTR}</td>

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import Chart from '../components/Chart';
+import Chart from '../../components/Chart';
 import axios from 'axios'
 import { Container, Row, Col } from 'reactstrap';
 
 // This file is only for example. 
-//Is not being used. 
-//Click the specific folder to see the file  that the graph is using.
+//To add a new graph we need to add it in the specific folder and add the path to the content.js file in /dashboard
 
 class App extends Component {
   constructor(){
@@ -21,7 +20,7 @@ class App extends Component {
 
   getChartData(){
     //Call the url that you need
-    axios.get("http://localhost:3003/mobile").then(api =>{
+    axios.get("http://localhost:3003/tablet").then(api =>{
       const data = api.data;
 
       var date =[];

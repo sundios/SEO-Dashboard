@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Chart from '../components/Chart';
+import Chart from '../../components/Chart';
 import axios from 'axios'
 import { Container, Row, Col } from 'reactstrap';
 
-// This file is only for example. 
-//Is not being used. 
-//Click the specific folder to see the file  that the graph is using.
+
 
 class App extends Component {
   constructor(){
@@ -20,14 +18,11 @@ class App extends Component {
   }
 
   getChartData(){
-    //Call the url that you need
-    axios.get("http://localhost:3003/mobile").then(api =>{
+    axios.get("http://localhost:3003/desktop").then(api =>{
       const data = api.data;
 
       var date =[];
-      var clicks = []
-      var impressions =[]
-
+      var ctr = []
       
      
 
@@ -35,23 +30,22 @@ class App extends Component {
       for (var i in data)
       {
       date.push(data[i].Date)
-      clicks.push(data[i].Clicks)
-      impressions.push(data[i].Impressions)
+      ctr.push(data[i].CTR)
 
       }
 
       
+      
        //Check if my api is working
       // console.log(data)
-      // console.log(date)
-      // console.log(clicks)
-     
+      // console.log(ctr)
+
       this.setState({
           chartData:{
             labels: date,
             datasets:[
               {
-                label:'Clicks',
+                label:'CTR',
                  fill: true,
           borderColor: "#1f8ef1",
           borderWidth: 2,
@@ -64,19 +58,12 @@ class App extends Component {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-                data:clicks,
+                data:ctr,
                 backgroundColor:[
                   'rgba(29,140,248,0.2)',
 
                ]
               },
-              {
-            label:'Impressions',
-                data:impressions,
-                backgroundColor:[
-                  'rgba(228, 241, 254, 1)',  
-               ]
-          },
             ]
           }
       });
@@ -89,9 +76,10 @@ class App extends Component {
       
           <Col>
               {Object.keys(this.state.chartData).length &&
-               <Chart chartData={this.state.chartData} location="Clicks and Impressions" legendPosition="bottom"/>
+               <Chart chartData={this.state.chartData} location="CTR" legendPosition="bottom"/>
              }
-          </Col>
+
+             </Col>
     );
   }
 }

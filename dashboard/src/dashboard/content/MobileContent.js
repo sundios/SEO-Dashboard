@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import Top from '../topkpi/top'
-import Ctr from '../charts/ctr'
-import Rank from '../charts/rank'
-import Tables1 from '../tables/table1'
-import Tables2 from '../tables/table2'
-import MainChart from '../charts/chartjs'
+import Top from '../../topkpi/mobile/top'
+import Ctr from '../../charts/mobile/ctr'
+import Rank from '../../charts/mobile/rank'
+import Tables1 from '../../tables/mobile/table1'
+import Tables2 from '../../tables/mobile/table2'
+import MainChart from '../../charts/mobile/chartjs'
 import {Row, Col} from 'reactstrap';
 
 
 
-//This file is not used. Its a te,mplate to create new dashboards.
+
 
 
 class Content extends Component {

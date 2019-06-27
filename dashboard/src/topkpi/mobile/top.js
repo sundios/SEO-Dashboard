@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './top.css'
+import '../top.css'
 import { Row, Col } from 'reactstrap';
-
-// This file is only for example. 
-//Is not being used. 
-//Click the specific folder to see the file  that the graph is using.
-
 
 class top extends Component{
   state = {
