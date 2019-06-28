@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import '../top.css'
 import { Row, Col } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCrown ,faEye , faFire, faSignal} from '@fortawesome/free-solid-svg-icons'
 
 class top extends Component{
   state = {
@@ -81,11 +83,36 @@ class top extends Component{
     const {kpi3} = this.state;
     const {kpi4} = this.state;
     return(
-      <Row>
-        <Col className='top'>Total Clicks: <strong><h2>{kpi1}</h2></strong></Col>
-        <Col className='top'>Total Impressions:<strong><h2>{kpi2}</h2></strong></Col>
-        <Col className='top'>Average CTR:<strong><h2>{kpi3}%</h2> </strong></Col>
-        <Col className='top'>Average Rank:<strong><h2>{kpi4}</h2></strong></Col>
+         <Row>
+        <Col className='top'>
+          <div className='box'>
+            <FontAwesomeIcon className="ic" icon={faCrown} />
+          </div>
+          <p>Total Clicks:</p> 
+          <strong><h2>{kpi1}</h2>
+          </strong>
+        </Col>
+        <Col className='top'>
+          <div className='box'>
+            <FontAwesomeIcon className="ic" icon={faEye} />
+          </div> 
+          <p>Total Impressions:</p>
+          <strong><h2>{kpi2}</h2></strong>
+        </Col>
+        <Col className='top'>
+          <div className='box'>
+            <FontAwesomeIcon className="ic" icon={faFire} />
+          </div>
+          <p>Average CTR:</p>
+          <strong><h2>{kpi3}%</h2> </strong>
+        </Col>
+        <Col className='top'>
+          <div className='box'>
+            <FontAwesomeIcon className="ic" icon={faSignal} />
+          </div>
+          <p>Average Rank:</p>
+          <strong><h2>{kpi4}</h2></strong>
+        </Col>
       </Row>
     )
   }

@@ -13,7 +13,7 @@ class App extends Component {
   render() {
     return (
     	<div>
-      <Title title="TuvesHD SEO Dashboard" description="Dashboard for https://www.tuves.com" />
+      <Title title="TuvesHD SEO Dashboard" description=" Dashboard for https://www.tuves.com" />
 
 
     		<Dashboard />

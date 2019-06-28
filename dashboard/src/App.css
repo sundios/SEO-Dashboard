@@ -18,6 +18,8 @@
   margin: 0px auto;
 }
 
+.top { border: solid 1px; }
+
 
 
 @keyframes App-logo-spin {
