@@ -8,7 +8,7 @@ const path = require('path')
 
 app.use(cors())
 
-// Mobile API Call
+// ---- Mobile API Call ----
 app.get('/mobile/' ,(req, res) => {
 	console.log("fetching user with ID" + req.params)
 
@@ -22,59 +22,6 @@ app.get('/mobile/' ,(req, res) => {
 
 	
 	connection.query("SELECT * FROM mobile", (err,rows,fields) => {
-		if (err) {
-			console.log("Failed to query for" + err)
-			res.sendStatu(500)
-			return
-			//throw err
-		}
-		console.log("I think we fetch users succesfully")
-		res.json(rows)
-	})
-//res.end()
-})
-
-//Desktop API call
-app.get('/desktop/' ,(req, res) => {
-	console.log("fetching user with ID" + req.params)
-
-	const connection = mysql.createConnection({
-		host: 'localhost',
-		user:'root',
-		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
-		password:'root',
-		database :'ecom'
-	})	
-
-	
-	connection.query("SELECT * FROM desktop", (err,rows,fields) => {
-		if (err) {
-			console.log("Failed to query for" + err)
-			res.sendStatu(500)
-			return
-			//throw err
-		}
-		console.log("I think we fetch users succesfully")
-		res.json(rows)
-	})
-//res.end()
-})
-
-//Tablet API Call
-
-app.get('/tablet/' ,(req, res) => {
-	console.log("fetching user with ID" + req.params)
-
-	const connection = mysql.createConnection({
-		host: 'localhost',
-		user:'root',
-		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
-		password:'root',
-		database :'ecom'
-	})	
-
-	
-	connection.query("SELECT * FROM tablet", (err,rows,fields) => {
 		if (err) {
 			console.log("Failed to query for" + err)
 			res.sendStatu(500)
@@ -138,6 +85,171 @@ app.get('/urls-mobile/' ,(req, res) => {
 	})
 //res.end()
 })
+
+//---- END MOBILE ----
+
+
+
+// ---- Desktop API call ----
+app.get('/desktop/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM desktop", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top Keywords API Call
+app.get('/keywords-desktop/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `keywords-desktop`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top URLs API Call
+app.get('/urls-desktop/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `urls-desktop`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//---- END DESKTOP ----
+
+//---- Tablet API Call ----
+
+app.get('/tablet/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM tablet", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top Keywords API Call
+app.get('/keywords-tablet/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `keywords-tablet`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top URLs API Call
+app.get('/urls-tablet/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `urls-tablet`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+
 
 //Get specific ID 
 

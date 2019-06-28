@@ -3,6 +3,8 @@ import './App.css';
 import Dashboard from './dashboard/dashboard'
 import { Container, Row, Col } from 'reactstrap';
 import {Helmet} from "react-helmet";
+import Title from './components/titles'
+ 
 
 
 class App extends Component {
@@ -11,13 +13,8 @@ class App extends Component {
   render() {
     return (
     	<div>
-       <Helmet>
-                <meta charSet="utf-8" />
-                <title>Tuves HD React APP</title>
-                <link rel="canonical" href="http://mysite.com/example" />
-                <meta name="description" content="Here is a precise description of my awesome webpage." />
-                <meta name="robots" content="noindex, nofollow" />
-            </Helmet>
+      <Title title="TuvesHD SEO Dashboard" description="Dashboard for https://www.tuves.com" />
+
 
     		<Dashboard />
     
