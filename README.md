@@ -36,5 +36,5 @@ This project is composed by 5 steps.
 
 ## Full report
 
-You can find detailed information here --> [Full report](https://github.com/sundios/SEO-Dashboard/blob/master/Advance_Project_1_Konrad_Burchardt.pdf)
+You can find detailed information here --> [Full report](https://github.com/sundios/SEO-Dashboard/blob/master/Full_report.pdf)
 
