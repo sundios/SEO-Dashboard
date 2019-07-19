@@ -1,0 +1,17 @@
+@import url('https://code.highcharts.com/css/highcharts.css');
+
+.highcharts-area{
+	fill: #137db7;
+}
+
+.highcharts-tracker-line {
+    stroke-linejoin: round;
+    stroke: rgba(0,0,250, 0.0001);;
+    stroke-width: 22;
+    fill: none;
+}
+
+.highcharts-color-2 {
+    fill: #ed7d7d;
+    stroke: #ffffff;
+    }
