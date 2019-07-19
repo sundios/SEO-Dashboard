@@ -4,7 +4,7 @@ import {
   HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
   AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip
 } from 'react-jsx-highstock';
-import './charts.css'
+
 
 import axios from 'axios'
 
@@ -23,7 +23,7 @@ class ch2 extends Component {
   }
 
   getChartData(){
-	    axios.get("http://localhost:3003/desktop").then(api =>{
+	    axios.get("http://localhost:3003/mobile").then(api =>{
 
 	  	 	const data = api.data;
 	      // console.log(data)

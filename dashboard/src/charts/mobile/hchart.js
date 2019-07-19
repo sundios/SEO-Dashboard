@@ -4,7 +4,7 @@ import {
   HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
   AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip, FlagsSeries, PlotBand
 } from 'react-jsx-highstock';
-import './charts.css'
+
 
 import axios from 'axios'
 
@@ -19,13 +19,12 @@ class ch2 extends Component {
 	}
 
 
-
   componentDidMount(){
     this.getChartData();
   }
 
   getChartData(){
-	    axios.get("http://localhost:3003/desktop").then(api =>{
+	    axios.get("http://localhost:3003/mobile").then(api =>{
 
 	  	 	const data = api.data;
 	      // console.log(data)
@@ -116,7 +115,7 @@ const cd1 = days.map((ent, i) => [ent, backlinks[i]]);
 				
 				<HighchartsStockChart>
 					<Chart zoomtype="x" />
-					<Title> www.Tuves.cl Desktop Traffic </Title>
+					<Title> www.Tuves.cl Mobile Traffic </Title>
 
 					<Legend>
 						<Legend.Title> Legend </Legend.Title>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Top from '../../topkpi/mobile/top'
-import Ctr from '../../charts/mobile/ctr'
-import Rank from '../../charts/mobile/rank'
+import Ctr from '../../charts/mobile/hctr'
+import Rank from '../../charts/mobile/hrank'
 import Tables1 from '../../tables/mobile/table1'
 import Tables2 from '../../tables/mobile/table2'
-import MainChart from '../../charts/mobile/chartjs'
+import MainChart from '../../charts/mobile/hchart'
 import {Row, Col} from 'reactstrap';
 import {Helmet} from "react-helmet";
 
