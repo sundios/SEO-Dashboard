@@ -1,5 +1,6 @@
 import React , { Component } from 'react';
 import './dashboard.css';
+import AllContent from './content/AllContent'
 import MobileContent from './content/MobileContent';
 import DesktopContent from './content/DesktopContent';
 import TabletContent from './content/TabletContent';
@@ -60,7 +61,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 function Home() {
   return(
 
-    <p> This is home. Build dahsboard with Desktop, mobile and tablet data together. </p>
+    <AllContent /> 
     );
   
 }

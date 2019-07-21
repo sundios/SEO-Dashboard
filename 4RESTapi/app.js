@@ -8,6 +8,32 @@ const path = require('path')
 
 app.use(cors())
 
+// ---- All data API Call ----
+app.get('/all/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM all_t", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
 // ---- Mobile API Call ----
 app.get('/mobile/' ,(req, res) => {
 	console.log("fetching user with ID" + req.params)
