@@ -79,7 +79,7 @@ class ch2 extends Component {
 				
 				<HighchartsStockChart>
 					<Chart zoomtype="xy" />
-					<Title> CTR </Title>
+					<Title> CTR vs Clicks </Title>
 
 					<Legend>
 						<Legend.Title> Legend </Legend.Title>

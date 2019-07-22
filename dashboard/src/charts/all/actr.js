@@ -79,7 +79,7 @@ class ch2 extends Component {
 				
 				<HighchartsStockChart>
 					<Chart zoomtype="xy" />
-					<Title> CTR </Title>
+					<Title> CTR vs Clicks </Title>
 
 					<Legend>
 						<Legend.Title> Legend </Legend.Title>
@@ -91,7 +91,7 @@ class ch2 extends Component {
           			</XAxis>
 
           			<YAxis >
-			            <YAxis.Title>CTR</YAxis.Title>
+			            <YAxis.Title>CTR vs Clicks</YAxis.Title>
 
 			          
 			            <AreaSplineSeries id="CTR" name="CTR" data={hctr} />

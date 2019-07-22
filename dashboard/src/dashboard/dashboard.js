@@ -39,11 +39,11 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
       <div className="container-fluid">
       <Row>
         <Sidebar />
-         <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Home} />
         <Route path="/mobile" component={Mobile} />
         <Route path="/desktop" component={Desktop} />
         <Route path="/tablet" component={Tablet} />
-
+        <Route path="/ranks" component={Rank} />
       </Row>
     </div>
   </div> 
@@ -59,31 +59,32 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
 function Home() {
-  return(
-
-    <AllContent /> 
-    );
-  
+  return(<AllContent /> 
+    );  
 }
 
 function Mobile() {
   return(<MobileContent />
     );
-  
 }
 
 function Desktop() {
   return(<DesktopContent />
-    );
-  
+    );  
 }
 
 
 function Tablet() {
   return(<TabletContent />
     );
-  
+}  
+
+function Rank() {
+  return(<h1> Rankings goes here... still need to figure out how to create them here </h1>
+    );
 }
+  
+
 export default dashboard;
 
 

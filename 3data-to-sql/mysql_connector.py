@@ -12,19 +12,19 @@ database = 'ecom'
 mydb = create_engine('mysql+pymysql://' + user + ':' + passw + '@' + host + ':' + str(port) + '/' + database , echo=False)
 
 #-------exporting all-------
-csvFileName = 'all_t.csv'
-mobile = pd.read_csv(os.path.join(csvFileName))
-mobile.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
+# csvFileName = 'all_t.csv'
+# mobile = pd.read_csv(os.path.join(csvFileName))
+# mobile.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
 
 # #exporting Keywords
 # csvFileName = 'keywords-all.csv'
 # tablet = pd.read_csv(os.path.join(csvFileName))
 # tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
 
-# #exporting Urls
-# csvFileName = 'urls-all.csv'
-# tablet = pd.read_csv(os.path.join(csvFileName))
-# tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
+#exporting Urls
+csvFileName = 'urls-all.csv'
+tablet = pd.read_csv(os.path.join(csvFileName))
+tablet.to_sql(name=csvFileName[:-4], con=mydb, if_exists = 'replace', index=False)
 
 
 # #-------exporting mobile-------

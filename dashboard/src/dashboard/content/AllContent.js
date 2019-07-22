@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Top from '../../topkpi/all/top'
 import Ctr from '../../charts/all/actr'
 import Rank from '../../charts/all/arank'
-import Tables1 from '../../tables/mobile/table1'
-import Tables2 from '../../tables/mobile/table2'
+import Tables1 from '../../tables/all/table1'
+import Tables2 from '../../tables/all/table2'
 import MainChart from '../../charts/all/achart'
 import {Row, Col} from 'reactstrap';
 import {Helmet} from "react-helmet";

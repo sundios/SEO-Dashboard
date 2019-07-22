@@ -34,6 +34,60 @@ app.get('/all/' ,(req, res) => {
 //res.end()
 })
 
+//Top Keywords API Call
+app.get('/keywords-all/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `keywords-all`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//Top URLs API Call
+app.get('/urls-all/' ,(req, res) => {
+	console.log("fetching user with ID" + req.params)
+
+	const connection = mysql.createConnection({
+		host: 'localhost',
+		user:'root',
+		socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+		password:'root',
+		database :'ecom'
+	})	
+
+	
+	connection.query("SELECT * FROM `urls-all`", (err,rows,fields) => {
+		if (err) {
+			console.log("Failed to query for" + err)
+			res.sendStatu(500)
+			return
+			//throw err
+		}
+		console.log("I think we fetch users succesfully")
+		res.json(rows)
+	})
+//res.end()
+})
+
+//---- END ALL ----
+
 // ---- Mobile API Call ----
 app.get('/mobile/' ,(req, res) => {
 	console.log("fetching user with ID" + req.params)

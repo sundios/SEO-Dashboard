@@ -41,16 +41,10 @@ class Sidebar extends Component {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  <FontAwesomeIcon icon={faDesktop} /> All Top Keywords & Url
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="/ranks">
                   <span data-feather="layers"></span>
                   <FontAwesomeIcon icon={faDesktop} /> Rankings
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

@@ -2,8 +2,13 @@ import React, { Component }from 'react';
 import Highcharts from 'highcharts/highstock';
 import {
   HighchartsStockChart, Chart, withHighcharts, XAxis, YAxis, Title, Legend,
-  AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip, FlagsSeries, PlotBand
+  AreaSplineSeries, SplineSeries, Navigator, RangeSelector, Tooltip
 } from 'react-jsx-highstock';
+
+import Highcharts2 from 'highcharts';
+import {
+  HighchartsChart,  LineSeries
+} from 'react-jsx-highcharts';
 
 
 import axios from 'axios'
@@ -18,8 +23,6 @@ class ch2 extends Component {
 	    }
 	}
 
-
-
   componentDidMount(){
     this.getChartData();
   }
@@ -31,15 +34,16 @@ class ch2 extends Component {
 	      // console.log(data)
 
 		    var date =[];
-	      	var clicks = []
-	      	var impressions =[]
+	      	var rank =[];
 	      	
 	      	for ( var i in data)
 	      	{
 	      		date.push(data[i].Date)
-	      		clicks.push(data[i].Clicks)
-	      		impressions.push(data[i].Impressions)
+	      		 rank.push(data[i].Position)
+	      		
 	      	}
+
+
 
 	      	//Transforming date into timestamp
 	      	const days =[]
@@ -49,66 +53,25 @@ class ch2 extends Component {
 	      	
 	       }
 
-	       //concatenating clicks + timestamp date into one array 
-	       //concatenating impressions + timestamp into one array
-	      	const cd = days.map((ent, i) => [ent, clicks[i]]);
-	      	const id = days.map((ent, i) => [ent, impressions[i]]);
-	      	// console.log(cd)
 
-	      	//dummy data for back links ideally we need API call from majestic
-	      	const backlinks = [4,3	,
-6	,
-2	,
-12	,
-0	,
-11	,
-0	,
-21	,
-1	,
-3	,
-33	,
-0	,
-13	,
-1	,
-12	,
-44	,
-2	,
-2	,
-17	,
-0	,
-0	,
-200	,
-0	,
-11	,
-46	,
-10	,
-1	,
-0	,
-2	,
-111	,
-]
-
-//concatenating backlins + timestamp
-
-const cd1 = days.map((ent, i) => [ent, backlinks[i]]);
+	       //concatenating rank + timestamp date into one array 
+	      	const cd1 = days.map((ent, i) => [ent, rank[i]]);
+	      	
+	      	console.log(cd1)
 
 
 
 	      	// setting the state to pass in the render part
 	      	 this.setState({
-
-	      	 	impressions:id,
-	      	 	clicks: cd,
-	      	 	bl :cd1
+	      	 	rank:cd1
 	      	 })
 	    });
 	}
 
 	render() {
 		//defining the data variables
-		const {impressions} = this.state;
-		const {clicks} = this.state;
-		const {bl} = this.state;
+		const {rank} = this.state;
+		
 		
 		
 		return(
@@ -116,7 +79,7 @@ const cd1 = days.map((ent, i) => [ent, backlinks[i]]);
 				
 				<HighchartsStockChart>
 					<Chart zoomtype="x" />
-					<Title> www.Tuves.cl Desktop Traffic </Title>
+					<Title> Ranks </Title>
 
 					<Legend>
 						<Legend.Title> Legend </Legend.Title>
@@ -128,17 +91,14 @@ const cd1 = days.map((ent, i) => [ent, backlinks[i]]);
           			</XAxis>
 
           			<YAxis >
-			            <YAxis.Title>Clicks & Impressions</YAxis.Title>
+			            <YAxis.Title>Avg Ranks</YAxis.Title>
 			            
-			            <AreaSplineSeries  id="Clicks" name="Clicks" data={clicks}  />
-			            <AreaSplineSeries id="Impressions" name="Impressions" data={impressions} />
+			          
+			            <AreaSplineSeries id="Rank" name="Avg Ranks" data={rank} />
 			            
           			</YAxis>
 
-          			<YAxis opposite>
-    					<YAxis.Title>BackLinks </YAxis.Title>
-    					<AreaSplineSeries id="Backlinks" name="Backlinks" data={bl} />
-  					</YAxis>
+          			
 	
 
 
@@ -151,10 +111,8 @@ const cd1 = days.map((ent, i) => [ent, backlinks[i]]);
 					 </RangeSelector>
 
 					 <Navigator >
-        				<Navigator.Series seriesId="Clicks" />
-        				<Navigator.Series seriesId="Impressions" />
-        				<Navigator.Series seriesId="Backlinks" />
-
+        				<Navigator.Series seriesId="rank" />
+      
       				</Navigator>
 
 			
