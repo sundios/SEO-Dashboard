@@ -31,7 +31,7 @@ This project is composed by 5 steps.
 
 ## Visualizations
 
-![alt text](dash6.gif)
+![alt text](dash.gif)
 
 
 ## Full report
