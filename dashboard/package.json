@@ -10,7 +10,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
-    "highcharts": "^7.1.2",
+    "highcharts": "^9.0.0",
     "jquery": "^3.4.1",
     "ngx-perfect-scrollbar": "^7.2.1",
     "prop-types": "^15.7.2",
