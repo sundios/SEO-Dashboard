@@ -1,0 +1,9 @@
+flask==2.3.3
+flask-cors==4.0.0
+pandas
+openai
+requests
+google-api-python-client
+oauth2client
+httplib2
+python-dateutil

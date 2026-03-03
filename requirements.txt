@@ -1,0 +1,7 @@
+chainlit==2.5.5
+openai>=1.0.0
+pandas>=1.5.0
+google-api-python-client>=2.0.0
+oauth2client>=4.1.0
+httplib2>=0.20.0
+python-dateutil>=2.8.0 

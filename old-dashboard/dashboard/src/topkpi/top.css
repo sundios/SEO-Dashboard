@@ -1,0 +1,39 @@
+.top{
+
+height: 94px;
+text-align: center;
+border: solid 1px;
+background-color: rgb(66, 165, 246);
+margin: 10px;
+border-radius: 5px;
+}
+
+.top h2 {
+	color: white;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.top p {
+	color: white;
+}
+
+.box { background-color: rgba(0,0,0,0.1);
+float: left; 
+height: 100%;
+width: 35%;
+margin-left:-15px;
+}
+
+.ic{
+	height: 4em!important;
+    color: white;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+
+@media only screen and (max-width: 1200px) {
+ .box { display: none; }
+}

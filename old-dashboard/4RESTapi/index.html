@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>tuves.clREST API HOME PAGE</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+      .pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #3a3f44;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+  }
+  h4{ margin-top: 20px; }
+      
+    </style>
+
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        
+      </div>
+
+      <div class="jumbotron">
+        <h1 class="display-3">NodeJS REST API </h1>
+        <p class="lead">REST API with ExpressJS in NodeJS. This API fetches organic data from a MySQL database. The data is from <a href="https://www.tuves.cl/"> Tuves</a>. This page is a index with example and paths to help the use of the API.</p>
+  
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h3>Mobile</h3>
+          <p> Get all the Mobile Clicks, Impressions, CTR and Ranks </p>
+            
+            <p><strong>Endpoints:</strong> </p>
+            <ul>
+              <li>
+                <code> '/mobile/' </code> -- Get all data
+              </li>
+              <li> <code>'/mobile/:id' </code> -- Get specific resource
+            </ul>
+            <p> <strong> Example request: </strong></p>
+            <div class="pre">
+              <code> 
+                <p id="demo"><script>
+document.getElementById("demo").innerHTML = 
+"http " + window.location.hostname;
+</script>/mobile/1</p>
+              </code> </div>
+            <p> <strong> Example response: </strong></p>
+            <div class="pre"> <code> [{"id":1,"Clicks":63,"Impressions":138,"CTR":0.288225814,"Position":4.437770563,"Date":"1/1/19","Device":"mobile"}
+            ]</code> </div>
+
+            <a href="/mobile" class="spacer"> Go to path</a>
+
+
+            
+
+          <h4>Desktop</h4>
+            <p>Get all the Desktop Clicks, Impressions, CTR and Ranks</p>
+              <p><strong>Endpoints:</strong> </p>
+                <ul>
+                  <li>
+                    <code> '/desktop/' </code> -- Get all data
+                   </li>
+                 </ul>
+                   <p> <strong> Example</strong></p>
+                      <div class="pre"> <code> [{"id":1,"Clicks":63,"Impressions":138,"CTR":0.288225814,"Position":4.437770563,"Date":"1/1/19","Device":"desktop}
+                        ]</code> </div>
+           <a href="/desktop"> Go to path</a>
+
+          <h4>Tablet</h4>
+            <p>Get all Tablet Clicks, Impressions, CTR and Ranks</p>
+                <p><strong>Endpoints:</strong> </p>
+                  <ul>
+                    <li>
+                      <code> '/tablet/' </code> -- Get all data
+                    </li>
+                  </ul>
+                <p> Example</p>
+           
+           <div class="pre"> <code> [{"id":1,"Clicks":63,"Impressions":138,"CTR":0.288225814,"Position":4.437770563,"Date":"1/1/19","Device":"tablet"}
+                        ]</code> </div>
+           <a href="/desktop"> Go to path</a>
+
+         </div>
+
+        <div class="col-lg-6">
+          <h4>Top 10 Keywords</h4>
+          <p>Get the top 10 Keywords Clicks, Impressions, CTR and Ranks </p>
+           <p><strong>Endpoints:</strong> </p>
+                <ul>
+                  <li>
+                    <code> '/Keywords/' </code> -- Get all data
+                   </li>
+                 </ul>
+                   <p> <strong> Example</strong></p>
+                      <div class="pre"> <code> [{Keyword: "b'tuves'",
+Clicks: 269,
+Impressions: 354,
+CTR: 0.759887005649718,
+Position: 1}]
+                        ]</code> </div>
+           <a href="/desktop"> Go to path</a>
+
+
+           <h4>Top 10 URLs</h4>
+          <p>Top 10 URLs Clicks, Impressions, CTR and Ranks </p>
+           <p><strong>Endpoints:</strong> </p>
+                <ul>
+                  <li>
+                    <code> '/URLs/' </code> -- Get all data
+                   </li>
+                 </ul>
+                   <p> <strong> Example</strong></p>
+                      <div class="pre"> <code> 
+                        {
+Url: "b'https://www.tuves.cl/'",
+Clicks: 544,
+Impressions: 1276,
+CTR: 0.426332288401254,
+Position: 4.3871473354232
+}</code> </div>
+           <a href="/desktop"> Go to path</a>
+
+          <h4>Random</h4>
+          <p>Adding something in the future</p>
+         <a href="/mobile"> Go to path</a>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>&copy; Made by Konrad Burchardt</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
