@@ -50,6 +50,43 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 - Set OpenAI API key for AI insights
 - Select up to 6 sites for the overview dashboard
 
+## Dashboard Sections
+
+### Sites Overview
+See a multi-site summary at a glance with key metrics and trend charts for each selected property.
+
+![Sites Overview](./public/readme-images/sites-overview.png)
+
+### Traffic Performance
+Analyze daily clicks, impressions, CTR, and average position with filters, tables, and algorithm update annotations.
+
+![Traffic Performance](./public/readme-images/traffic-performance.png)
+
+### Correlation Matrix
+Visualize how GSC metrics relate to each other through pairwise charts and quick correlation insights.
+
+![Correlation Matrix](./public/readme-images/correlation-matrix.png)
+
+### Traffic Insights
+Identify top keyword winners and losers between two dates, including contribution-to-change visualization.
+
+![Traffic Insights](./public/readme-images/traffic-insights.png)
+
+### URL Inspection
+Inspect a specific URL to view indexing status, crawl details, mobile usability, and rich result data.
+
+![URL Inspection](./public/readme-images/url-inspection.png)
+
+### Sitemap
+Manage sitemaps by listing, submitting, refreshing, reviewing details, and deleting entries for a selected site.
+
+![Sitemap](./public/readme-images/sitemap.png)
+
+### Settings
+Configure API credentials, authorize Search Console access, and control overview site selections.
+
+![Settings](./public/readme-images/settings.png)
+
 ## Tech Stack
 
 ### Frontend
