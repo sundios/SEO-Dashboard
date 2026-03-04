@@ -138,8 +138,9 @@ export default function Dashboard() {
   // Algorithm updates toggle state
   const [showAlgorithmUpdates, setShowAlgorithmUpdates] = useState(false);
 
-  // Google Algorithm Updates 2024-2025
+  // Google Algorithm Updates 2024-2026
   const algorithmUpdates = [
+    { date: '2026-02-05', name: 'February 2026 Discover update', duration: '21 days, 17 hours' },
     { date: '2025-12-11', name: 'December 2025 core update', duration: '18 days, 2 hours' },
     { date: '2025-08-26', name: 'August 2025 spam update', duration: '26 days, 15 hours' },
     { date: '2025-06-30', name: 'June 2025 core update', duration: '16 days, 18 hours' },
