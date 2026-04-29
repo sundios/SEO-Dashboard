@@ -57,6 +57,7 @@ build/
 
 # Sensitive files - DO NOT COMMIT
 authorizedcreds.dat
+authorized_trends_token.json
 dashboard_config.json
 client_secret.json
 client_secrets.json

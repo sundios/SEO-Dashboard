@@ -44,8 +44,20 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 - Delete existing sitemaps
 - View sitemap details and URL counts
 
+### Trends Analysis
+- Overlay GSC click traffic with Google Trends search interest on a dual-axis chart
+- Identify whether traffic changes are demand-driven (seasonal) or structural (site problem)
+- Configurable per-analysis: site, date range, URL filter, query filter, device, country, top-N queries, Trends geo, and time resolution (day / week / month)
+- Google Algorithm Update annotations (core = orange, spam = purple, Discover = green) to correlate ranking changes with known updates
+- AI-powered diagnosis using GPT-4o — reads the chart pattern and applies a three-scenario framework:
+  - Both lines fall together → seasonal demand drop, probably fine
+  - Traffic falls, Trends flat or rising → structural site problem (ranking drop, technical regression, algorithm hit)
+  - Both lines rise/fall in sync → demand-driven, site is capturing its fair share
+- Powered by the Google Trends API (`searchtrends` OAuth scope) with a separate credentials file
+
 ### Settings
 - Configure Google Search Console credentials path
+- Configure Google Trends credentials path (separate OAuth client for the Trends API)
 - Authorize GSC API access
 - Set OpenAI API key for AI insights
 - Select up to 6 sites for the overview dashboard
@@ -81,6 +93,11 @@ Inspect a specific URL to view indexing status, crawl details, mobile usability,
 Manage sitemaps by listing, submitting, refreshing, reviewing details, and deleting entries for a selected site.
 
 ![Sitemap](./public/readme-images/sitemap.png)
+
+### Trends Analysis
+Overlay GSC click traffic with Google Trends search interest to separate seasonal demand from structural SEO problems. Algorithm update markers highlight known Google updates within the selected date range. Click **AI Insights** for a GPT-4o diagnosis that reads the chart pattern and recommends next steps.
+
+![Trends Analysis](./public/readme-images/trends-analysis.png)
 
 ### Settings
 Configure API credentials, authorize Search Console access, and control overview site selections.
@@ -163,6 +180,7 @@ gsc-dashboard/
 │   │   ├── traffic-insights/        # Winners & Losers
 │   │   ├── url-inspection/          # URL Inspection
 │   │   ├── sitemap/                 # Sitemap Management
+│   │   ├── trends-analysis/         # Trends Analysis (GSC vs Google Trends)
 │   │   └── settings/                # Settings
 │   ├── components/
 │   │   ├── dashboard/               # Dashboard-specific components
@@ -172,7 +190,9 @@ gsc-dashboard/
 │       └── DataContext.tsx           # Global state management
 ├── backend_api.py                   # Flask backend API
 ├── backend_requirements.txt         # Python dependencies
+├── algo_updates.json                # Google algorithm update dates (single source of truth)
 ├── dashboard_config.json            # App configuration (auto-generated)
+├── authorized_trends_token.json     # Google Trends OAuth token (auto-generated on first use)
 ├── package.json                     # Node.js dependencies
 └── README.md
 ```
@@ -196,6 +216,9 @@ gsc-dashboard/
 | GET | `/api/sitemaps/get` | Get sitemap details |
 | POST | `/api/sitemaps/submit` | Submit a new sitemap |
 | POST | `/api/sitemaps/delete` | Delete a sitemap |
+| POST | `/api/trends/analyze` | Run GSC + Google Trends combined analysis |
+| POST | `/api/trends/insights` | Generate AI diagnosis from Trends analysis data |
+| GET | `/api/algo-updates` | Return algorithm updates from `algo_updates.json` |
 
 ## Configuration
 
@@ -204,25 +227,49 @@ The app stores configuration in `dashboard_config.json`:
 ```json
 {
   "openaiApiKey": "",
-  "credentialsPath": "/path/to/client_secret.json",
+  "credentialsPath": "/path/to/gsc_client_secret.json",
+  "trendsCredentialsPath": "/path/to/trends_client_secret.json",
   "isAuthorized": false,
   "overviewSites": []
 }
 ```
 
+The `trendsCredentialsPath` must point to a Google OAuth client secret with the `https://www.googleapis.com/auth/searchtrends` scope enabled. On first use, a browser window will open for authorization and the token is saved to `authorized_trends_token.json`.
+
 ## Algorithm Updates
 
-The dashboard includes Google algorithm update dates (2024-2025) that can be displayed as annotations on the traffic chart:
+Algorithm update dates are stored in `algo_updates.json` — the single source of truth used by both the Traffic Performance chart and the Trends Analysis page. To add a new update, edit this file:
 
+```json
+{
+  "algo_updates": [
+    {
+      "name": "March 2026 core update",
+      "start_date": "2026-03-27",
+      "duration": "12 days, 4 hours",
+      "type": "core"
+    }
+  ]
+}
+```
+
+Supported `type` values and their annotation colors:
+| Type | Color |
+|------|-------|
+| `core` | Orange |
+| `spam` | Purple |
+| `discover` | Green |
+
+Current updates tracked:
+- March 2026 core update
+- March 2026 spam update
+- February 2026 Discover update
 - December 2025 core update
 - August 2025 spam update
 - June 2025 core update
 - March 2025 core update
-- December 2024 spam update
-- December 2024 core update
-- November 2024 core update
 
-Toggle annotations on/off using the "Show Algorithm Updates" button on the chart.
+Toggle annotations on/off using the "Show Algorithm Updates" control on each chart.
 
 ## License
 

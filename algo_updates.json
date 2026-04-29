@@ -1,0 +1,46 @@
+{
+  "algo_updates": [
+    {
+      "name": "March 2026 core update",
+      "start_date": "2026-03-27",
+      "duration": "12 days, 4 hours",
+      "type": "core"
+    },
+    {
+      "name": "March 2026 spam update",
+      "start_date": "2026-03-24",
+      "duration": "19 hours, 30 minutes",
+      "type": "spam"
+    },
+    {
+      "name": "February 2026 Discover update",
+      "start_date": "2026-02-05",
+      "duration": "21 days, 17 hours",
+      "type": "discover"
+    },
+    {
+      "name": "December 2025 core update",
+      "start_date": "2025-12-11",
+      "duration": "18 days, 2 hours",
+      "type": "core"
+    },
+    {
+      "name": "August 2025 spam update",
+      "start_date": "2025-08-26",
+      "duration": "26 days, 15 hours",
+      "type": "spam"
+    },
+    {
+      "name": "June 2025 core update",
+      "start_date": "2025-06-30",
+      "duration": "16 days, 18 hours",
+      "type": "core"
+    },
+    {
+      "name": "March 2025 core update",
+      "start_date": "2025-03-13",
+      "duration": "13 days, 21 hours",
+      "type": "core"
+    }
+  ]
+}

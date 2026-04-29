@@ -10,6 +10,7 @@ import sys
 import os
 import argparse
 import datetime
+import time
 import httplib2
 from apiclient.discovery import build
 from oauth2client import client, file, tools
@@ -17,6 +18,9 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 import json
 from openai import OpenAI
+import requests as http_requests
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request as GoogleRequest
 
 app = Flask(__name__)
 # Enable CORS for Next.js frontend with explicit configuration
@@ -40,9 +44,113 @@ openai_client = None
 DEFAULT_SETTINGS = {
     "openaiApiKey": "",
     "credentialsPath": "/Users/kburchardt/Desktop/SEO_scripts-main/scripts/Api-Keys/client_secret.json",
+    "trendsCredentialsPath": "",
     "isAuthorized": False,
     "overviewSites": []
 }
+
+# ─── Google Trends helpers ────────────────────────────────────────────────────
+
+TRENDS_SCOPES = ["https://www.googleapis.com/auth/searchtrends"]
+TRENDS_BASE_URLS = [
+    "https://searchtrends.googleapis.com",
+    "https://trends.googleapis.com",
+]
+
+
+def load_trends_creds(token_file: str, client_secrets: str) -> Credentials:
+    creds = None
+    if os.path.exists(token_file):
+        creds = Credentials.from_authorized_user_file(token_file, TRENDS_SCOPES)
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(GoogleRequest())
+        with open(token_file, "w") as f:
+            f.write(creds.to_json())
+        return creds
+    if not creds or not creds.valid:
+        from google_auth_oauthlib.flow import InstalledAppFlow
+        flow = InstalledAppFlow.from_client_secrets_file(client_secrets, TRENDS_SCOPES)
+        try:
+            creds = flow.run_local_server(port=0)
+        except Exception:
+            creds = flow.run_console()
+        with open(token_file, "w") as f:
+            f.write(creds.to_json())
+    return creds
+
+
+def trends_auth_headers(creds: Credentials, token_file: str) -> dict:
+    if creds.expired and creds.refresh_token:
+        creds.refresh(GoogleRequest())
+        with open(token_file, "w") as f:
+            f.write(creds.to_json())
+    return {
+        "Authorization": f"Bearer {creds.token}",
+        "Content-Type": "application/json",
+    }
+
+
+def fetch_trends_for_query(query: str, creds: Credentials, token_file: str,
+                           start_dt: datetime.datetime, end_dt: datetime.datetime,
+                           geo_code: str, time_resolution: str) -> list:
+    headers = trends_auth_headers(creds, token_file)
+    request_body = {
+        "spec": {
+            "expression": {"terms": [{"value": query, "type": "BROAD"}]},
+            "geo": {"type": "GEO_TYPE_COUNTRY_OR_REGION", "code": geo_code},
+            "timeRange": {
+                "startTime": {"seconds": int(start_dt.timestamp())},
+                "endTime": {"seconds": int(end_dt.timestamp())},
+            },
+            "timeResolution": time_resolution,
+        }
+    }
+
+    final = None
+    for base in TRENDS_BASE_URLS:
+        resp = http_requests.post(
+            f"{base}/v1alpha:fetchTimeSeries",
+            headers=headers,
+            json=request_body,
+        )
+        if resp.status_code == 404:
+            continue
+        if not resp.ok:
+            resp.raise_for_status()
+        op = resp.json()
+        op_name = op.get("name")
+        if not op_name:
+            final = op
+            break
+        if not op_name.startswith("operations/"):
+            op_name = "operations/" + op_name
+        while True:
+            r = http_requests.get(f"{base}/v1alpha/{op_name}", headers=headers)
+            r.raise_for_status()
+            result = r.json()
+            if result.get("done"):
+                final = result
+                break
+            time.sleep(1)
+        break
+
+    if final is None:
+        raise RuntimeError("No valid Trends endpoint responded.")
+
+    resp_payload = final.get("response", final)
+    points = []
+    for pt in resp_payload.get("timeSeries", {}).get("points", []):
+        tr = pt.get("timeRange", {})
+        raw = tr.get("startTime")
+        if raw is None:
+            continue
+        if isinstance(raw, dict) and "seconds" in raw:
+            dt = pd.Timestamp.fromtimestamp(int(raw["seconds"]), tz="UTC").tz_localize(None)
+        else:
+            dt = pd.to_datetime(raw, utc=True).tz_localize(None)
+        val = float(pt.get("scaledSearchInterest", pt.get("searchInterest", 0)))
+        points.append({"date": dt.strftime("%Y-%m-%d"), "value": val})
+    return points
 
 def load_config():
     """Load configuration from file"""
@@ -603,10 +711,10 @@ def get_query_insights():
 def get_settings():
     """Get current settings"""
     config = load_config()
-    # Return all settings including API keys
     return jsonify({
         "openaiApiKey": config.get('openaiApiKey', ''),
         "credentialsPath": config.get('credentialsPath', ''),
+        "trendsCredentialsPath": config.get('trendsCredentialsPath', ''),
         "isAuthorized": config.get('isAuthorized', False),
         "overviewSites": config.get('overviewSites', [])
     })
@@ -626,8 +734,10 @@ def save_settings():
         
         if 'credentialsPath' in data:
             config['credentialsPath'] = data['credentialsPath']
-            # Reset authorization status when path changes
             config['isAuthorized'] = False
+
+        if 'trendsCredentialsPath' in data:
+            config['trendsCredentialsPath'] = data['trendsCredentialsPath']
         
         if 'overviewSites' in data:
             # Validate that we don't have more than 6 sites
@@ -643,6 +753,7 @@ def save_settings():
                 "isAuthorized": config.get('isAuthorized', False),
                 "openaiApiKey": config.get('openaiApiKey', ''),
                 "credentialsPath": config.get('credentialsPath', ''),
+                "trendsCredentialsPath": config.get('trendsCredentialsPath', ''),
                 "overviewSites": config.get('overviewSites', [])
             })
         else:
@@ -1018,6 +1129,281 @@ def delete_sitemap():
                 print(f"[SITEMAPS DELETE] Could not parse error content: {parse_error}")
         print(f"[SITEMAPS DELETE] Returning error: {error_message}", file=sys.stderr, flush=True)
         return jsonify({"error": f"Sitemap API error: {error_message}"}), 400
+
+@app.route('/api/trends/analyze', methods=['POST'])
+def trends_analyze():
+    """
+    Run GSC + Google Trends combined analysis.
+    Body JSON fields:
+      siteUrl, startDate, endDate, urlFilter, queryFilter,
+      device, country, topNQueries, trendsGeoCode, timeResolution
+    """
+    global webmasters_service
+
+    if not webmasters_service:
+        return jsonify({"error": "GSC service not initialized. Please authenticate first."}), 401
+
+    try:
+        body = request.get_json() or {}
+        site_url       = body.get('siteUrl', '')
+        start_date_str = body.get('startDate', '')
+        end_date_str   = body.get('endDate', '')
+        url_filter     = body.get('urlFilter') or None
+        query_filter   = body.get('queryFilter') or None
+        device         = body.get('device') or None
+        country        = body.get('country') or None
+        top_n          = int(body.get('topNQueries', 15))
+        geo_code       = body.get('trendsGeoCode', 'US')
+        time_res       = body.get('timeResolution', 'WEEK').upper()
+
+        if not all([site_url, start_date_str, end_date_str]):
+            return jsonify({"error": "siteUrl, startDate, endDate are required"}), 400
+
+        config = load_config()
+        trends_creds_path = config.get('trendsCredentialsPath', '')
+        if not trends_creds_path or not os.path.exists(trends_creds_path):
+            return jsonify({"error": "Google Trends credentials path not set or file not found. Configure it in Settings."}), 400
+
+        # Build dimension filters
+        filters = []
+        if url_filter:
+            filters.append({"dimension": "page", "operator": "contains", "expression": url_filter})
+        if query_filter:
+            filters.append({"dimension": "query", "operator": "contains", "expression": query_filter})
+        if device:
+            device_map = {'desktop': 'DESKTOP', 'mobile': 'MOBILE', 'tablet': 'TABLET'}
+            filters.append({"dimension": "device", "operator": "equals",
+                            "expression": device_map.get(device.lower(), device.upper())})
+        if country:
+            filters.append({"dimension": "country", "operator": "equals", "expression": country})
+
+        dim_filter_groups = [{"filters": filters}] if filters else None
+
+        # ── Step 1: top queries by total clicks ──────────────────────────────
+        top_q_request = {
+            'startDate': start_date_str,
+            'endDate': end_date_str,
+            'dimensions': ['query'],
+            'aggregationType': 'auto',
+            'rowLimit': 25000,
+        }
+        if dim_filter_groups:
+            top_q_request['dimensionFilterGroups'] = dim_filter_groups
+
+        top_q_resp = webmasters_service.searchanalytics().query(
+            siteUrl=site_url, body=top_q_request).execute()
+        top_q_rows = top_q_resp.get('rows', [])
+        top_q_rows.sort(key=lambda r: r.get('clicks', 0), reverse=True)
+        top_queries = [r['keys'][0] for r in top_q_rows[:top_n]]
+
+        if not top_queries:
+            return jsonify({"error": "No queries found for the selected parameters."}), 404
+
+        # ── Step 2: daily/weekly/monthly clicks for those top queries ─────────
+        kw_filters = (filters or []) + [{
+            "dimension": "query",
+            "operator": "includingRegex",
+            "expression": "|".join(top_queries),
+        }]
+        kw_request = {
+            'startDate': start_date_str,
+            'endDate': end_date_str,
+            'dimensions': ['query', 'date'],
+            'aggregationType': 'auto',
+            'rowLimit': 25000,
+            'dimensionFilterGroups': [{"filters": kw_filters}],
+        }
+        kw_resp = webmasters_service.searchanalytics().query(
+            siteUrl=site_url, body=kw_request).execute()
+        kw_rows = kw_resp.get('rows', [])
+
+        # Build per-keyword per-date frame, then resample
+        kw_data = []
+        for row in kw_rows:
+            q, d = row['keys'][0], row['keys'][1]
+            if q in top_queries:
+                kw_data.append({'query': q, 'date': pd.to_datetime(d),
+                                'clicks': row['clicks'], 'impressions': row['impressions']})
+
+        if kw_data:
+            df_kw = pd.DataFrame(kw_data).set_index('date')
+            freq = {'DAY': 'D', 'WEEK': 'W-MON'}.get(time_res, 'MS')
+            df_totals = (df_kw.groupby('query')
+                         .resample(freq)[['clicks', 'impressions']]
+                         .sum()
+                         .reset_index())
+            df_period = (df_totals.groupby('date')[['clicks', 'impressions']]
+                         .sum()
+                         .reset_index())
+            df_period['date'] = df_period['date'].dt.strftime('%Y-%m-%d')
+            gsc_series = df_period.to_dict(orient='records')
+        else:
+            gsc_series = []
+
+        # ── Step 3: Google Trends ─────────────────────────────────────────────
+        token_file = os.path.join(os.path.dirname(__file__), 'authorized_trends_token.json')
+        try:
+            trends_creds = load_trends_creds(token_file, trends_creds_path)
+        except Exception as e:
+            return jsonify({"error": f"Trends auth failed: {str(e)}"}), 500
+
+        start_dt = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').replace(
+            tzinfo=datetime.timezone.utc)
+        cutoff = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=3)
+        end_dt = min(
+            datetime.datetime.strptime(end_date_str, '%Y-%m-%d').replace(
+                tzinfo=datetime.timezone.utc),
+            cutoff
+        )
+
+        trends_by_keyword = {}
+        errors = []
+        for q in top_queries:
+            try:
+                pts = fetch_trends_for_query(q, trends_creds, token_file,
+                                             start_dt, end_dt, geo_code, time_res)
+                trends_by_keyword[q] = pts
+            except Exception as e:
+                errors.append(f"{q}: {str(e)}")
+
+        if not trends_by_keyword:
+            return jsonify({
+                "error": "Could not fetch any Trends data.",
+                "details": errors
+            }), 500
+
+        # Average trends across top queries per period
+        period_vals: dict = {}
+        for pts in trends_by_keyword.values():
+            for pt in pts:
+                period_vals.setdefault(pt['date'], []).append(pt['value'])
+        trends_avg = [
+            {"date": d, "value": sum(vals) / len(vals)}
+            for d, vals in sorted(period_vals.items())
+        ]
+
+        return jsonify({
+            "topQueries": top_queries,
+            "gscSeries": gsc_series,
+            "trendsAvg": trends_avg,
+            "trendsByKeyword": {
+                q: pts for q, pts in trends_by_keyword.items()
+            },
+            "errors": errors,
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/trends/insights', methods=['POST'])
+def trends_insights():
+    """Generate AI insights from combined GSC + Trends data."""
+    global openai_client
+
+    if openai_client is None:
+        initialize_openai_client()
+    if openai_client is None:
+        return jsonify({"error": "OpenAI API key not configured. Please set it in Settings."}), 400
+
+    try:
+        body = request.get_json() or {}
+        site_url      = body.get('siteUrl', '')
+        start_date    = body.get('startDate', '')
+        end_date      = body.get('endDate', '')
+        time_res      = body.get('timeResolution', 'WEEK')
+        top_queries   = body.get('topQueries', [])
+        gsc_series    = body.get('gscSeries', [])   # [{date, clicks, trendsValue}]
+        algo_updates  = body.get('algoUpdatesInRange', [])  # [{name, start_date, type}]
+
+        if not gsc_series:
+            return jsonify({"error": "No data provided."}), 400
+
+        # Build the data table for the prompt
+        data_rows = "\n".join(
+            f"{r['date']} | {int(r.get('clicks', 0)):,} | {round(r.get('trendsValue', 0), 1)}"
+            for r in gsc_series
+        )
+
+        algo_section = ""
+        if algo_updates:
+            algo_section = "\n\nGoogle Algorithm Updates that fall within this date range:\n"
+            for u in algo_updates:
+                algo_section += f"- {u['start_date']}: {u['name']} ({u['type']} update)\n"
+
+        system_prompt = """You are a senior SEO analyst interpreting a dual-axis chart that overlays Google Search Console (GSC) click traffic with Google Trends search interest for a website.
+
+Your job is to diagnose what is happening by comparing the two lines, using this diagnostic framework:
+
+SCENARIOS:
+1. Lines tracking together (both up, both down, same shape) → Demand and traffic move in sync. Likely seasonal or demand-driven. No structural problem — the site is capturing its fair share of available demand.
+2. Traffic down, Trends flat or up → Search interest is intact but the site is losing share. Look for: algorithm updates (annotated in the data), ranking drops, technical regressions, content quality changes, or a competitor gaining ground.
+3. Both lines flat or declining together → Genuine demand contraction. Seasonal, niche shift, or a broader market change. Not necessarily a site problem.
+4. Traffic rises, Trends flat → The site is gaining share or getting more efficient. Positive structural signal.
+
+ALGORITHM UPDATES:
+If you see algorithm updates in the data, check whether a divergence in the two lines starts near one of those dates. A divergence that begins right at a known update is a strong signal the update affected this site specifically.
+
+THE CORE HYPOTHESIS:
+When traffic drops, three explanations are possible:
+- Both GSC and Trends fall together → Seasonal demand drop — probably fine
+- GSC traffic falls, Trends flat or rising → Something is wrong with the site (ranking loss, technical issue, algorithm hit, content quality signal)
+- GSC traffic falls, Trends also rising elsewhere → Ranking loss — the site lost share to competitors
+
+The key insight: if people are still searching for the topics but site traffic is falling, the problem is on the site's end.
+
+OUTPUT FORMAT:
+Write a clear, structured diagnosis with:
+1. **Overall pattern** — what the two lines are doing relative to each other
+2. **Key periods** — identify specific date ranges where the lines diverge or converge, and what that likely means
+3. **Algorithm update impact** — if any updates fall near divergence points, call them out explicitly
+4. **Diagnosis** — your best read of what is causing the traffic behavior
+5. **Recommended next steps** — 2-3 concrete actions to investigate or fix
+
+Be specific about dates and magnitudes. Be direct — do not hedge everything with "it could be". Make a call.
+"""
+
+        user_content = f"""Site: {site_url}
+Date range: {start_date} to {end_date}
+Time resolution: {time_res}
+Top queries analyzed: {', '.join(top_queries[:10])}
+{algo_section}
+
+Data (Date | GSC Clicks | Google Trends scaled interest):
+{data_rows}
+"""
+
+        chat_completion = openai_client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+            model="gpt-4o",
+        )
+
+        return jsonify({"insights": chat_completion.choices[0].message.content})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/algo-updates', methods=['GET'])
+def get_algo_updates():
+    """Return algorithm updates from algo_updates.json"""
+    try:
+        algo_file = os.path.join(os.path.dirname(__file__), 'algo_updates.json')
+        if not os.path.exists(algo_file):
+            return jsonify({"algo_updates": []})
+        with open(algo_file, 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # Debug route to list all registered routes
 @app.route('/api/debug/routes', methods=['GET'])

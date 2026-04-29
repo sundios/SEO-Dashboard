@@ -9,6 +9,7 @@ import { useData } from '@/contexts/DataContext';
 interface SettingsData {
   openaiApiKey: string;
   credentialsPath: string;
+  trendsCredentialsPath: string;
   isAuthorized: boolean;
   overviewSites: string[];
 }
@@ -19,6 +20,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SettingsData>({
     openaiApiKey: '',
     credentialsPath: '',
+    trendsCredentialsPath: '',
     isAuthorized: false,
     overviewSites: []
   });
@@ -51,6 +53,7 @@ export default function SettingsPage() {
         setSettings({
           openaiApiKey: String(data.openaiApiKey || ''),
           credentialsPath: String(data.credentialsPath || ''),
+          trendsCredentialsPath: String(data.trendsCredentialsPath || ''),
           isAuthorized: Boolean(data.isAuthorized || false),
           overviewSites: Array.isArray(data.overviewSites) ? data.overviewSites : []
         });
@@ -85,6 +88,7 @@ export default function SettingsPage() {
         body: JSON.stringify({
           openaiApiKey: settings.openaiApiKey,
           credentialsPath: settings.credentialsPath,
+          trendsCredentialsPath: settings.trendsCredentialsPath,
           overviewSites: settings.overviewSites
         })
       });
@@ -99,6 +103,7 @@ export default function SettingsPage() {
         const updatedSettings = {
           openaiApiKey: String(result.openaiApiKey !== undefined && result.openaiApiKey !== null ? result.openaiApiKey : settings.openaiApiKey || ''),
           credentialsPath: String(result.credentialsPath !== undefined && result.credentialsPath !== null ? result.credentialsPath : settings.credentialsPath || ''),
+          trendsCredentialsPath: String(result.trendsCredentialsPath !== undefined && result.trendsCredentialsPath !== null ? result.trendsCredentialsPath : settings.trendsCredentialsPath || ''),
           isAuthorized: Boolean(result.isAuthorized !== undefined ? result.isAuthorized : settings.isAuthorized),
           overviewSites: Array.isArray(result.overviewSites) ? result.overviewSites : (Array.isArray(settings.overviewSites) ? settings.overviewSites : [])
         };
@@ -171,6 +176,7 @@ export default function SettingsPage() {
         setSettings({
           openaiApiKey: '',
           credentialsPath: '',
+          trendsCredentialsPath: '',
           isAuthorized: false,
           overviewSites: []
         });
@@ -282,6 +288,25 @@ export default function SettingsPage() {
                 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   Google Cloud Console
                 </a>
+              </p>
+            </div>
+
+            {/* Google Trends Credentials Path */}
+            <div className="space-y-2">
+              <label htmlFor="trends-credentials-path" className="flex items-center space-x-2 text-sm font-medium text-gray-700">
+                <FontAwesomeIcon icon={faFile} className="text-gray-500" />
+                <span>Google Trends Credentials Path</span>
+              </label>
+              <input
+                id="trends-credentials-path"
+                type="text"
+                value={settings.trendsCredentialsPath}
+                onChange={(e) => setSettings({ ...settings, trendsCredentialsPath: e.target.value })}
+                placeholder="/path/to/trends_client_secret.json"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p className="text-xs text-gray-500">
+                Path to your Google Trends OAuth client_secret.json. Must have the <code>searchtrends</code> scope enabled in Google Cloud Console.
               </p>
             </div>
 
