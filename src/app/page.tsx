@@ -6,7 +6,7 @@ import DashboardControls from '@/components/dashboard/DashboardControls';
 import { useData } from '@/contexts/DataContext';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faBrain, faRefresh, faExclamationTriangle, faMouse, faEye, faChartLine, faMapPin, faMagnifyingGlass, faGlobe, faTrophy, faCode } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faBrain, faRefresh, faExclamationTriangle, faMouse, faEye, faChartLine, faMapPin, faMagnifyingGlass, faGlobe, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { queryColumns, pageColumns, countryColumns, GSCDataRow } from '@/components/dashboard/columns';
@@ -138,16 +138,14 @@ export default function Dashboard() {
   // Algorithm updates toggle state
   const [showAlgorithmUpdates, setShowAlgorithmUpdates] = useState(false);
 
-  // Google Algorithm Updates 2024-2026
   const algorithmUpdates = [
-    { date: '2026-02-05', name: 'February 2026 Discover update', duration: '21 days, 17 hours' },
-    { date: '2025-12-11', name: 'December 2025 core update', duration: '18 days, 2 hours' },
-    { date: '2025-08-26', name: 'August 2025 spam update', duration: '26 days, 15 hours' },
-    { date: '2025-06-30', name: 'June 2025 core update', duration: '16 days, 18 hours' },
-    { date: '2025-03-13', name: 'March 2025 core update', duration: '13 days, 21 hours' },
-    { date: '2024-12-19', name: 'December 2024 spam update', duration: '7 days, 2 hours' },
-    { date: '2024-12-12', name: 'December 2024 core update', duration: '6 days, 4 hours' },
-    { date: '2024-11-11', name: 'November 2024 core update', duration: '23 days, 13 hours' }
+    { date: '2026-03-27', name: 'March 2026 core update',         duration: '12 days, 4 hours',        type: 'core' },
+    { date: '2026-03-24', name: 'March 2026 spam update',         duration: '19 hours, 30 minutes',    type: 'spam' },
+    { date: '2026-02-05', name: 'February 2026 Discover update',  duration: '21 days, 17 hours',       type: 'discover' },
+    { date: '2025-12-11', name: 'December 2025 core update',      duration: '18 days, 2 hours',        type: 'core' },
+    { date: '2025-08-26', name: 'August 2025 spam update',        duration: '26 days, 15 hours',       type: 'spam' },
+    { date: '2025-06-30', name: 'June 2025 core update',          duration: '16 days, 18 hours',       type: 'core' },
+    { date: '2025-03-13', name: 'March 2025 core update',         duration: '13 days, 21 hours',       type: 'core' },
   ];
 
 
@@ -510,82 +508,55 @@ export default function Dashboard() {
     // Create chart labels first to match dates properly
     const chartLabels = dailyData.map((item: DailyData) => new Date(item.date).toLocaleDateString());
     
-    // Prepare annotation configuration for algorithm updates (only if toggle is on)
+    const UPDATE_COLORS: Record<string, string> = {
+      core:     'rgba(230, 126, 34, 0.85)',
+      spam:     'rgba(142, 68, 173, 0.85)',
+      discover: 'rgba(39, 174, 96, 0.85)',
+    };
+
     const annotations: any = {};
-    
-    // Only create annotations if toggle is enabled
+
     if (showAlgorithmUpdates) {
-      // Check which algorithm updates fall within the current date range
       const start = new Date(startDate);
       const end = new Date(endDate);
-      
-      console.log('🔍 Checking algorithm updates for date range:', {
-        startDate: start.toISOString().split('T')[0],
-        endDate: end.toISOString().split('T')[0],
-        totalUpdates: algorithmUpdates.length
-      });
-      
       let annotationIndex = 0;
+
       algorithmUpdates.forEach((update) => {
-      const updateDate = new Date(update.date);
-      
-      // Only add annotation if update falls within the date range
-      if (updateDate >= start && updateDate <= end) {
-        console.log(`📅 Found update in range: ${update.name} on ${update.date}`);
-        
-        // Find the matching label in chart labels by comparing dates
-        const matchingLabelIndex = dailyData.findIndex((item: DailyData) => {
-          const itemDate = new Date(item.date);
-          return itemDate.getFullYear() === updateDate.getFullYear() &&
-                 itemDate.getMonth() === updateDate.getMonth() &&
-                 itemDate.getDate() === updateDate.getDate();
+        const updateDate = new Date(update.date);
+        if (updateDate < start || updateDate > end) return;
+
+        // Snap to nearest daily data point (same approach as Trends Analysis)
+        let closestIdx = -1;
+        let closestDiff = Infinity;
+        dailyData.forEach((item: DailyData, i: number) => {
+          const diff = Math.abs(new Date(item.date).getTime() - updateDate.getTime());
+          if (diff < closestDiff) { closestDiff = diff; closestIdx = i; }
         });
-        
-        if (matchingLabelIndex !== -1) {
-          // Use the exact label from the chart to ensure matching
-          const matchingLabel = chartLabels[matchingLabelIndex];
-          
-          console.log(`✅ Creating annotation for ${update.name} at label: ${matchingLabel} (index: ${matchingLabelIndex})`);
-          
-          // Create annotation with red vertical dotted line
-          annotations[`update-${annotationIndex}`] = {
-            type: 'line',
-            xMin: matchingLabel,
-            xMax: matchingLabel,
-            borderColor: 'rgba(239, 68, 68, 0.8)', // Red color
-            borderWidth: 2,
-            borderDash: [5, 5], // Dotted line
-            xScaleID: 'x',
-            drawTime: 'afterDatasetsDraw', // Draw annotations on top of data lines
-            label: {
-              display: true,
-              content: update.name,
-              position: 'start',
-              backgroundColor: 'rgba(239, 68, 68, 0.9)',
-              color: 'white',
-              font: {
-                size: 11,
-                weight: 'bold'
-              },
-              padding: {
-                top: 4,
-                bottom: 4,
-                left: 8,
-                right: 8
-              },
-              yAdjust: -30 - (annotationIndex * 20) // Stack labels vertically
-            }
-          };
-          annotationIndex++;
-        } else {
-          console.log(`⚠️ Update ${update.name} is in date range but no matching data point found`);
-        }
-      }
+        if (closestIdx === -1) return;
+
+        const color = UPDATE_COLORS[update.type] ?? UPDATE_COLORS.core;
+        annotations[`update-${annotationIndex}`] = {
+          type: 'line',
+          xMin: chartLabels[closestIdx],
+          xMax: chartLabels[closestIdx],
+          borderColor: color,
+          borderWidth: 2,
+          borderDash: [5, 5],
+          xScaleID: 'x',
+          drawTime: 'afterDatasetsDraw',
+          label: {
+            display: true,
+            content: update.name,
+            position: 'start',
+            backgroundColor: color,
+            color: 'white',
+            font: { size: 11, weight: 'bold' },
+            padding: { top: 4, bottom: 4, left: 8, right: 8 },
+            yAdjust: -30 - (annotationIndex * 20),
+          },
+        };
+        annotationIndex++;
       });
-      
-      console.log(`📊 Created ${Object.keys(annotations).length} annotations from ${algorithmUpdates.length} total updates`);
-    } else {
-      console.log('📊 Algorithm updates toggle is OFF - no annotations created');
     }
     
     // Function to update axis assignments based on visible datasets
@@ -710,23 +681,6 @@ export default function Dashboard() {
         }
       }
     };
-    
-    // Check if annotation plugin is available (loaded via script tag)
-    let annotationPluginAvailable = false;
-    if (typeof window !== 'undefined' && window.Chart && window.Chart.registry) {
-      try {
-        // Check if plugin is registered (it should auto-register when loaded via script tag)
-        const registeredPlugin = window.Chart.registry.getPlugin('annotation');
-        annotationPluginAvailable = !!registeredPlugin;
-        
-        if (!annotationPluginAvailable) {
-          console.warn('Annotation plugin not found in Chart.js registry');
-        }
-      } catch (e) {
-        console.log('Error checking annotation plugin:', e.message || e);
-        annotationPluginAvailable = false;
-      }
-    }
     
     // Build chart options
     const chartOptions: any = {
@@ -855,43 +809,8 @@ export default function Dashboard() {
       }
     };
     
-    // Add annotations to chart options if any exist and plugin is available
-    // Only add if plugin is confirmed available and Chart.js is ready
-    console.log('Annotation check:', {
-      pluginAvailable: annotationPluginAvailable,
-      annotationsCount: Object.keys(annotations).length,
-      annotations: Object.keys(annotations),
-      chartReady: !!window.Chart?.registry
-    });
-    
-    if (annotationPluginAvailable && Object.keys(annotations).length > 0 && window.Chart?.registry) {
-      try {
-        // Double-check plugin is registered
-        const pluginCheck = window.Chart.registry.getPlugin('annotation');
-        
-        if (pluginCheck) {
-          // Ensure plugins.annotation exists
-          if (!chartOptions.plugins.annotation) {
-            chartOptions.plugins.annotation = {};
-          }
-          chartOptions.plugins.annotation.annotations = annotations;
-          console.log(`✅ Added ${Object.keys(annotations).length} algorithm update annotations:`, Object.keys(annotations));
-          console.log('Annotation details:', annotations);
-        } else {
-          console.warn('⚠️ Annotation plugin not found in registry, skipping annotations');
-        }
-      } catch (e) {
-        console.error('❌ Error adding annotations to chart options:', e);
-      }
-    } else {
-      if (Object.keys(annotations).length > 0) {
-        if (!annotationPluginAvailable) {
-          console.warn('⚠️ Annotation plugin not available, skipping annotations. Annotations found:', Object.keys(annotations));
-        } else {
-          console.warn('⚠️ No annotations to add (date range may not include any algorithm updates)');
-        }
-      }
-    }
+    // Inject annotations directly — same approach as Trends Analysis page
+    chartOptions.plugins.annotation = { annotations };
     
     chartInstance.current = new window.Chart(ctx, {
       type: 'line',
@@ -1733,14 +1652,15 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button
-                onClick={() => setShowAlgorithmUpdates(!showAlgorithmUpdates)}
-                variant={showAlgorithmUpdates ? "default" : "outline"}
-                className={`flex items-center space-x-2 ${showAlgorithmUpdates ? 'bg-red-600 hover:bg-red-700 text-white' : ''}`}
-              >
-                <FontAwesomeIcon icon={faCode} />
-                <span>{showAlgorithmUpdates ? 'Hide' : 'Show'} Algorithm Updates</span>
-              </Button>
+              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={showAlgorithmUpdates}
+                  onChange={e => setShowAlgorithmUpdates(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+                />
+                Show Algorithm Updates
+              </label>
               <Button
                 onClick={downloadDailyData}
                 variant="default"

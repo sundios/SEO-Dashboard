@@ -4,6 +4,8 @@ pandas
 openai
 requests
 google-api-python-client
+google-auth
+google-auth-oauthlib
 oauth2client
 httplib2
 python-dateutil
