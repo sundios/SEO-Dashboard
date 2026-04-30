@@ -84,3 +84,4 @@ logs/
 *.tmp
 *.temp
 .cache/
+public/auth/client_secret_172101196960-qtjtrv9bn4nfr3p5r961fupvaprm2imf.apps.googleusercontent.com.json

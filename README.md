@@ -77,7 +77,7 @@ Analyze daily clicks, impressions, CTR, and average position with filters, table
 ### Correlation Matrix
 Visualize how GSC metrics relate to each other through pairwise charts and quick correlation insights.
 
-![Correlation Matrix](./public/readme-images/correlation-matrix.png)
+![Correlation Matrix](./public/readme-images/correlation-f  matrix.png)
 
 ### Traffic Insights
 Identify top keyword winners and losers between two dates, including contribution-to-change visualization.
