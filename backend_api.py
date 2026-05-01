@@ -1500,8 +1500,8 @@ def lmstudio_unload():
     if not model:
         return jsonify({"success": True})
     try:
-        # Standard LM Studio endpoint for unloading
-        resp = http_requests.post(f"{host}/api/v1/models/unload", json={"model": model}, timeout=10)
+        # Standard LM Studio endpoint for unloading requires `instance_id` instead of `model`
+        resp = http_requests.post(f"{host}/api/v1/models/unload", json={"instance_id": model}, timeout=10)
         return jsonify({"success": resp.ok, "status": resp.status_code})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
@@ -1517,6 +1517,21 @@ def lmstudio_load():
     if not model:
         return jsonify({"success": False, "error": "No model specified"}), 400
     try:
+        # Check if model is already loaded to prevent duplicate stacking
+        try:
+            models_resp = http_requests.get(f"{host}/api/v1/models", timeout=5)
+            if models_resp.status_code == 200:
+                models_data = models_resp.json()
+                for m in models_data.get('models', []):
+                    # Check matching by key or id
+                    if m.get('key') == model or m.get('id') == model:
+                        loaded_instances = m.get('loaded_instances', [])
+                        if len(loaded_instances) > 0:
+                            # It's already loaded! Return early to prevent stacking.
+                            return jsonify({"success": True, "status": 200, "message": "Already loaded"})
+        except Exception as check_e:
+            print(f"Warning: Failed to check if model is already loaded: {check_e}")
+
         # Standard LM Studio endpoint for loading
         resp = http_requests.post(f"{host}/api/v1/models/load", json={"model": model}, timeout=60)
         return jsonify({"success": resp.ok, "status": resp.status_code})
