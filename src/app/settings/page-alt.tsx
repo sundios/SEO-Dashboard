@@ -3,9 +3,24 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faFile, faCheckCircle, faExclamationTriangle, faSpinner, faEye, faEyeSlash, faTrash, faServer, faNetworkWired, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faFile, faCheckCircle, faExclamationTriangle, faSpinner, faEye, faEyeSlash, faTrash, faServer, faNetworkWired, faRefresh, faCircleXmark, faMicrochip } from '@fortawesome/free-solid-svg-icons';
 import { useData } from '@/contexts/DataContext';
 import ModelSelector from './model-selector';
+import { LMStudioClient } from "@lmstudio/sdk";
+import { Button } from "@/components/ui/button";
+// import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+// import { Slider } from "@/components/ui/slider";
+// import { Badge } from "@/components/ui/badge";
+import { Toaster, toast as toastNotification } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SettingsData {
   openaiApiKey: string;
@@ -18,25 +33,87 @@ interface SettingsData {
   lmStudioModel: string;
 }
 
-export default function SettingsPage() {
-  //   const client = new LMStudioClient();
+interface ModelSettings {
+  contextLength: number;
+  temperature: number;
+  ttl: number;
+  gpu: number,
+}
 
-  //   useEffect(() => {
-  //   const getModels = async () => {
-  //     try{
-  //       const models = await client.system.listDownloadedModels();
-  //       return models;
-  //     }catch(e){
-  //       console.error(e);
-  //       return [];
-  //     }
-  //   }
-  //   getModels();
+const defaultModelSettings: ModelSettings = {
+  contextLength: 2048,
+  temperature: 0.7,
+  ttl: 300, // 5 min
+  gpu: 0.5,
+};
+
+type ConnectionStatus =
+  | "disconnected"
+  | "connecting"
+  | "disconnecting"
+  | "connected"
+  | "error";
+
+interface ProcessResult {
+  processId: string;
+  status: "success" | "error";
+  data?: any;
+  error?: string;
+  timestamp: string;
+}
+
+export default function SettingsPage() {
+    const [serverUrl, setServerUrl] = useState("http://localhost:1234");
+  const [status, setStatus] = useState<ConnectionStatus>("disconnected");
+  const [modelInfo, setModelInfo] = useState<{
+    name: string;
+    format?: string;
+    size?: number;
+    identifier?: string;
+  } | null>(null);
+  const [statusMessage, setStatusMessage] = useState(
+    "Not connected to LM Studio."
+  );
+  const [models, setModels] = useState<any[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [isModelLoading, setIsModelLoading] = useState(false);
+  const [activeModelName, setActiveModelName] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+  const [isUnloading, setIsUnloading] = useState(false);
+
+  const [mounted, setMounted] = useState(false);
+  const [lastResult, setLastResult] = useState<ProcessResult | null>(null);
+  // const [progress, setProgress] = useState<TaskProgress | null>(null);
+  const [runningProcess, setRunningProcess] = useState<string | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  const [modelSettings, setModelSettings] = useState({
+    serverUrl: "http://localhost:1234",
+    contextLength: 2048,
+    temperature: 0.7,
+    ttl: 300, // 5 min
+    gpu: 0.5,
+    lmStudioModel: "",
+    modelSettings: { contextLength: 2048, temperature: 0.7, ttl: 300, gpu: 0.5 },
+  });
+
+  const client = new LMStudioClient();
+
+    // useEffect(() => {
+    const getModels = async () => {
+      try{
+        const models = await client.system.listDownloadedModels();
+        return models;
+      }catch(e){
+        console.error(e);
+        return [];
+      }
+    }
+    // getModels();
+
   // }, []);
-// const handleModelChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-//   const model = e.target.value;
-//   setSettings({ ...settings, lmStudioModel: model });
-// };
+  const myModels = getModels();
   const router = useRouter();
   const { clearAllData } = useData();
   const [settings, setSettings] = useState<SettingsData>({
@@ -65,6 +142,268 @@ export default function SettingsPage() {
   const [clearing, setClearing] = useState(false);
   const [showApiKey, setShowApiKey] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const addToLocalStorage = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+const isItemInLocalStorage = (key: string) => {
+  return localStorage.getItem(key) !== null;
+};
+const getFromLocalStorage = (key: string) => {
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
+};
+const removeFromLocalStorage = (key: string) => {
+  localStorage.removeItem(key);
+};
+
+  // --- CONNECTION & MODEL HANDLERS ---
+  const handleCheckConnection = async (url: string) => {
+    setStatus("connecting");
+    setStatusMessage("Pinging server...");
+    try {
+      const httpUrl = url
+        .replace("ws://", "http://")
+        .replace("wss://", "https://");
+      const response = await fetch(`${httpUrl}/v1/models`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setServerUrl(url);
+      setStatus("connected");
+      setStatusMessage("Server found. Checking model status...");
+      await handleGetModels(url);
+      await addToLocalStorage('lmStudioServerUrl', url);
+    } catch (e: any) {
+      console.error("Connection error:", e);
+      setStatus("error");
+      setStatusMessage(
+        `Connection failed: ${e.message}\n\nMake sure:\n1. LM Studio is running\n2. Server is enabled in LM Studio settings\n3. The port is correct (${url})`
+      );
+    }
+  };
+
+  const handleGetModels = async (url: string) => {
+    try {
+      console.log("Fetching models from:", url);
+      const httpUrl = url
+        .replace("ws://", "http://")
+        .replace("wss://", "https://");
+      console.log("Using HTTP URL for models:", httpUrl);
+      const response = await fetch(`${httpUrl}/v1/models`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const models = Array.isArray(data) ? data : data.data || [];
+      if (models.length > 0) {
+        const formattedModels = models.map(
+          (model: { id?: string; name?: string }, index: number) => {
+            const fallbackId = `model-${index}`;
+            const modelId = model.id ?? model.name ?? fallbackId;
+            const modelName = model.name ?? model.id ?? `Model ${index + 1}`;
+            return {
+              ...model,
+              id: modelId,
+              name: modelName,
+            };
+          }
+        );
+        setModels(formattedModels);
+        setStatus("connected");
+        setStatusMessage(
+          `Found ${formattedModels.length} models. Select one to load.`
+        );
+      } else {
+        setStatus("error");
+        setStatusMessage(
+          "Connected but no models found. Please load a model in LM Studio."
+        );
+      }
+    } catch (e: any) {
+      console.error("Error getting models:", e);
+      setStatus("error");
+      setStatusMessage(`Failed to get models: ${e.message}`);
+    }
+  };
+
+  const handleLoadModel = async () => {
+    if (!selectedModel) {
+      toastNotification.error("Please select a model first.");
+      return;
+    }
+    setIsModelLoading(true);
+    setStatus("connecting");
+    const displayName = selectedModel.split(/[/\\]/).pop() || selectedModel;
+    setStatusMessage(`Loading ${displayName}...`);
+    try {
+      const response = await addToLocalStorage("loadedModel", {
+        serverUrl,
+        modelName: selectedModel,
+      });
+      if (response !== null) {
+        await addToLocalStorage('lmStudioServerUrl', serverUrl);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const modelInfo = await getFromLocalStorage("loadedModel");
+        if (modelInfo?.isLoaded || modelInfo?.modelName) {
+          setActiveModelName(selectedModel);
+          setStatus("connected");
+          setStatusMessage(
+            `Connected to: ${modelInfo.modelName || displayName}`
+          );
+          toastNotification.success("Model loaded successfully!");
+        } else {
+          console.warn(
+            "Model loaded but status check was inconclusive:",
+            modelInfo
+          );
+          setActiveModelName(selectedModel);
+          setStatus("connected");
+          setStatusMessage(`Connected to: ${displayName}`);
+          toastNotification.success("Model loaded successfully!");
+        }
+      } else {
+        throw new Error(response || "Failed to load model");
+      }
+    } catch (e: any) {
+      console.error("handleLoadModel error:", e);
+      setStatus("error");
+      const errorMsg = e.message || "Failed to load model";
+      setStatusMessage(`Error: ${errorMsg}`);
+      toastNotification.error("Failed to load model", {
+        description: errorMsg,
+      });
+    } finally {
+      setIsModelLoading(false);
+    }
+  };
+
+  // --- CLEANUP: Kept the one, working unload function ---
+  const unloadCurrentModel = async () => {
+    if (!activeModelName && !modelInfo?.identifier) {
+      console.log("No active model to unload");
+      toastNotification.error("No active model to unload");
+      return;
+    }
+    setIsUnloading(true);
+    setStatus("disconnecting");
+    try {
+      const response = await addToLocalStorage("unloadModel", {} as any); // Sends empty body
+      if (response !== null) {
+        setActiveModelName(null);
+        setModelInfo(null);
+        setSelectedModel("");
+        setStatusMessage("Model unloaded successfully");
+        toastNotification.success("Model unloaded successfully!");
+        setStatus("disconnected");
+        // Refresh the models list
+        await handleGetModels(serverUrl);
+      } else {
+        throw new Error(response || "Failed to unload model");
+      }
+    } catch (e: any) {
+      console.error("unloadCurrentModel error:", e);
+      setStatus("error");
+      const errorMsg = e.message || "Failed to unload model";
+      setStatusMessage(`Error: ${errorMsg}`);
+      toastNotification.error("Failed to unload model", {
+        description: errorMsg,
+      });
+    } finally {
+      setIsUnloading(false);
+    }
+  };
+
+  // --- LOAD/UNLOAD SETTINGS MANAGEMENT ---
+  const updateSettingsFromModel = (currentServerUrl: string) => {
+    if (currentServerUrl) {
+      const newSettings = {
+        ...modelSettings,
+        serverUrl: currentServerUrl,
+        status: status as ConnectionStatus,
+        models: models,
+        selectedModel,
+        statusMessage,
+        activeModelName,
+      };
+      try {
+        addToLocalStorage('modelSettings', newSettings);
+        console.log("Saved model settings to sync storage");
+      } catch (err) {
+        console.error("Error saving model settings:", err);
+      }
+    }
+  };
+
+  const handleSaveModelSettings = () => {
+    if (!selectedModel) {
+      toastNotification.error("Please select a model to save settings for.");
+      return;
+    }
+    const updatedSettings = {
+      ...modelSettings,
+      serverUrl,
+      modelName: selectedModel,
+    };
+    addToLocalStorage('modelSettings', updatedSettings);
+    toastNotification.success(
+        "Model settings saved successfully! (Server: " +
+          updatedSettings.serverUrl +
+          ")"
+      );
+  };
+
+  const handleLoadModelSettings = async () => {
+    try {
+      const savedData = await getFromLocalStorage("modelSettings");
+      if (savedData.modelSettings) {
+        const { serverUrl, modelName, contextLength, temperature, ttl, gpu } =
+          savedData.modelSettings;
+        if (serverUrl) {
+          setServerUrl(serverUrl);
+          // Don't auto-select/load model here - user should explicitly load
+          if (modelName) {
+            const matches = models.filter((m) => m.id === modelName);
+            if (matches.length > 0) {
+              setSelectedModel(modelName);
+            }
+          }
+          // Update local state
+          setModelSettings((prev) => ({
+            ...prev,
+            serverUrl,
+            modelName: modelName || "",
+            contextLength: contextLength || 2048,
+            temperature: temperature || 0.7,
+            ttl: ttl || 300,
+            gpu: gpu || 0.5,
+          }));
+          toastNotification.success(
+            `Settings loaded. Model: ${modelName || "None"}`
+          );
+        }
+      }
+    } catch (e) {
+      console.error("Error loading model settings:", e);
+    }
+  };
+
+  const handleUnloadSettings = () => {
+    // We already unload the model, just clear the settings
+    removeFromLocalStorage('modelSettings');
+    toastNotification.success("Model settings cleared");
+    // Reset local state
+    setModelSettings((prev) => ({
+      ...prev,
+      serverUrl: "http://localhost:1234",
+        modelName: "",
+      }));
+  };
+
+  // Load model settings from storage on mount
+  useEffect(() => {
+    handleLoadModelSettings();
+  }, []);
 
   // Load settings on mount
   useEffect(() => {
@@ -132,7 +471,8 @@ export default function SettingsPage() {
     }
   };
 
-  const handleModelChange = async (newModel: string) => {
+  const handleModelChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newModel = e.target.value;
     const oldModel = settings.lmStudioModel;
     
     // Update local state immediately so UI feels responsive
@@ -440,12 +780,82 @@ export default function SettingsPage() {
                         </button>
                       </div>
                       <ModelSelector
-                        options={lmStudioModels.map(model => ({ id: model, name: model, object: 'model', owned_by: 'LM Studio' }))}
-                        value={settings.lmStudioModel}
-                        onChange={(value) => handleModelChange(value)}
-                        disabled={!lmStudioOnline && lmStudioModels.length === 0}
-                        className="w-full"
-                      />
+                  options={models}
+                  value={selectedModel}
+                  onChange={setSelectedModel}
+                  disabled={models.length === 0 || status === "connecting"}
+                  placeholder={
+                    models.length === 0
+                      ? "No models available"
+                      : "Select a model"
+                  }
+                  className="w-full"
+                />
+                {/* --- FIX: Use unloadCurrentModel --- */}
+                {activeModelName ? (
+                  <Button
+                    onClick={unloadCurrentModel} // <-- Use the correct handler
+                    disabled={isUnloading || status === "connecting"}
+                    variant="destructive"
+                  >
+                    {isUnloading ? (
+                      <FontAwesomeIcon icon={faRefresh}  className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <FontAwesomeIcon icon={faCircleXmark} className="w-4 h-4 mr-2" />
+                    )}
+                    Unload
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleLoadModel}
+                    disabled={
+                      // !selectedModel ||
+                      isModelLoading ||
+                      status === "connecting"
+                    }
+                  >
+                    {isModelLoading ? (
+                      <FontAwesomeIcon icon={faRefresh} className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <FontAwesomeIcon icon={faMicrochip} className="w-4 h-4 mr-2" />
+                    )}
+                    Load
+                  </Button>
+                )}
+                  <Select
+                    value={activeModelName || ""}
+                    onValueChange={(value) => {
+                      if (value) {
+                        setSelectedModel(value);
+                      }
+                    }}
+                    // disabled={models.length === 0 || status === "connecting"}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a model..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {lmStudioModels.map((model) => (
+                        <SelectItem key={model} value={model}>
+                          {model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                {/* <select
+                        value={activeModelName || ""}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setSelectedModel(e.target.value);
+                          }
+                        }}
+                        disabled={models.length === 0 || status === "connecting"}
+                      >
+                        <option value="">Select a model...</option>
+                        {lmStudioModels.map((model) => (
+                          <option key={model} value={model}>{model}</option>
+                        ))}
+                      </select> */}
                     </div>
                   </div>
                   {!lmStudioOnline && (
@@ -691,3 +1101,124 @@ export default function SettingsPage() {
   );
 }
 
+const Loader2 = (className: string) => {
+  return (
+    <div className={`flex items-center justify-center ${className}`}>
+      <svg width="800px" height="800px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlSpace="preserve" style={{ fillRule: "evenodd", clipRule: "evenodd", strokeLinejoin: "round", strokeMiterlimit: 2 }}>
+        <rect id="Icons" x="-1024" y="-64" width="1280" height="800" style={{ fill: "none" }} />
+        <g id="Icons1"> <g id="Strike">
+          </g>
+          <g id="H1">
+          </g>
+          <g id="H2">
+          </g>
+          <g id="H3">
+          </g>
+          <g id="list-ul">
+          </g>
+          <g id="hamburger-1">
+          </g>
+          <g id="hamburger-2">
+          </g>
+          <g id="list-ol">
+          </g>
+          <g id="list-task">
+          </g>
+          <g id="trash">
+          </g>
+          <g id="vertical-menu">
+          </g>
+          <g id="horizontal-menu">
+          </g>
+          <g id="sidebar-2">
+          </g>
+          <g id="Pen">
+          </g>
+          <g id="Pen1">
+          </g>
+          <g id="clock">
+          </g>
+          <g id="external-link">
+          </g>
+          <g id="hr">
+          </g>
+          <g id="info">
+          </g>
+          <g id="warning">
+          </g>
+          <g id="plus-circle">
+          </g>
+          <g id="minus-circle">
+          </g>
+          <g id="vue">
+          </g>
+          <g id="cog">
+          </g>
+          <g id="logo">
+          </g>
+          <g id="radio-check">
+          </g>
+          <g id="eye-slash">
+          </g>
+          <g id="eye">
+          </g>
+          <g id="toggle-off">
+          </g>
+          <g id="shredder">
+          </g>
+          <g id="spinner--loading--dots">
+            <path d="M46.03,32c0,-2.751 2.233,-4.985 4.985,-4.985c2.751,0 4.985,2.234 4.985,4.985c0,2.751 -2.234,4.985 -4.985,4.985c-2.752,0 -4.985,-2.234 -4.985,-4.985Z" style={{fill:"#d9d9d9"}} />
+            <path d="M41.92,41.92c1.946,-1.945 5.105,-1.945 7.051,0c1.945,1.946 1.945,5.105 0,7.051c-1.946,1.945 -5.105,1.945 -7.051,0c-1.945,-1.946 -1.945,-5.105 0,-7.051Z" style={{fill:"#b3b3b3"}} />
+            <circle cx="32" cy="51.015" r="4.985" style={{fill:"#8c8c8c"}} />
+            <path d="M22.08,41.92c1.945,1.946 1.945,5.105 0,7.051c-1.946,1.945 -5.105,1.945 -7.051,0c-1.945,-1.946 -1.945,-5.105 0,-7.051c1.946,-1.945 5.105,-1.945 7.051,0Z" style={{fill:"#666"}} />
+            <path d="M17.97,32c0,2.751 -2.233,4.985 -4.985,4.985c-2.751,0 -4.985,-2.234 -4.985,-4.985c0,-2.751 2.234,-4.985 4.985,-4.985c2.752,0 4.985,2.234 4.985,4.985Z" style={{fill:"#404040"}} />
+            <path d="M22.08,22.08c-1.946,1.945 -5.105,1.945 -7.051,0c-1.945,-1.946 -1.945,-5.105 0,-7.051c1.946,-1.945 5.105,-1.945 7.051,0c1.945,1.946 1.945,5.105 0,7.051Z" style={{fill:"#404040"}} />
+            <circle cx="32" cy="12.985" r="4.985" />
+          </g>
+          <g id="react">
+          </g>
+          <g id="check-selected">
+          </g>
+          <g id="turn-off">
+          </g>
+          <g id="code-block">
+          </g>
+          <g id="user">
+          </g>
+          <g id="coffee-bean">
+          </g>
+          <g id="coffee-beans">
+            <g id="coffee-bean1">
+            </g>
+          </g>
+          <g id="coffee-bean-filled">
+          </g>
+          <g id="coffee-beans-filled">
+            <g id="coffee-bean2">
+            </g>
+          </g>
+          <g id="clipboard">
+          </g>
+          <g id="clipboard-paste">
+          </g>
+          <g id="clipboard-copy">
+          </g>
+          <g id="Layer1">
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+const Cpu = (className: string) => {
+  return (
+    <div className={`text-white ${className}`}>
+<svg width="800px" height="800px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000">
+<g id="SVGRepo_bgCarrier" strokeWidth="0"/>
+<g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/>
+<g id="SVGRepo_iconCarrier"> <path d="M12.4286 10L11 12H13L11.5714 14" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/> <path d="M4 12C4 8.22876 4 6.34315 5.17157 5.17157C6.34315 4 8.22876 4 12 4C15.7712 4 17.6569 4 18.8284 5.17157C20 6.34315 20 8.22876 20 12C20 15.7712 20 17.6569 18.8284 18.8284C17.6569 20 15.7712 20 12 20C8.22876 20 6.34315 20 5.17157 18.8284C4 17.6569 4 15.7712 4 12Z" stroke="#000000" strokeWidth="1.5"/> <path d="M4 12H2" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M22 12H20" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M4 9H2" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M22 9H20" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M4 15H2" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M22 15H20" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M12 20L12 22" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M12 2L12 4" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M9 20L9 22" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M9 2L9 4" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M15 20L15 22" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M15 2L15 4" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> <path d="M17 14C17 15.4142 17 16.1213 16.5607 16.5607C16.1213 17 15.4142 17 14 17H10C8.58579 17 7.87868 17 7.43934 16.5607C7 16.1213 7 15.4142 7 14V10C7 8.58579 7 7.87868 7.43934 7.43934C7.87868 7 8.58579 7 10 7H14C15.4142 7 16.1213 7 16.5607 7.43934C17 7.87868 17 8.58579 17 10" stroke="#000000" strokeWidth="1.5" strokeLinecap="round"/> </g>
+</svg>
+    </div>
+  )
+}

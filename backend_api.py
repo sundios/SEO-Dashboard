@@ -39,6 +39,7 @@ CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'dashboard_config.json')
 webmasters_service = None
 verified_sites = []
 openai_client = None
+ai_model = "gpt-4o"  # Active model name — updated by initialize_ai_client()
 
 # Default settings
 DEFAULT_SETTINGS = {
@@ -46,7 +47,12 @@ DEFAULT_SETTINGS = {
     "credentialsPath": "/Users/kburchardt/Desktop/SEO_scripts-main/scripts/Api-Keys/client_secret.json",
     "trendsCredentialsPath": "",
     "isAuthorized": False,
-    "overviewSites": []
+    "overviewSites": [],
+    # AI provider settings
+    "aiProvider": "openai",          # "openai" | "local_llm"
+    "lmStudioHost": "http://localhost:1234",
+    "lmStudioModel": "",             # persisted model selection
+    "lmStudioModels": []             # persisted model list
 }
 
 # ─── Google Trends helpers ────────────────────────────────────────────────────
@@ -176,19 +182,41 @@ def save_config(config):
         return False
 
 def initialize_openai_client():
-    """Initialize OpenAI client from config"""
-    global openai_client
+    """Backward-compatible shim — delegates to initialize_ai_client()."""
+    initialize_ai_client()
+
+def initialize_ai_client():
+    """Initialize the AI client based on the configured provider (OpenAI or LM Studio)."""
+    global openai_client, ai_model
     config = load_config()
-    api_key = config.get('openaiApiKey', '')
-    if api_key:
+    provider = config.get('aiProvider', 'openai')
+
+    if provider == 'local_llm':
+        host = config.get('lmStudioHost', 'http://localhost:1234').rstrip('/')
+        model = config.get('lmStudioModel', '')
         try:
-            openai_client = OpenAI(api_key=api_key)
-            print("OpenAI client initialized")
+            openai_client = OpenAI(
+                base_url=f"{host}/v1",
+                api_key="lm-studio"  # LM Studio ignores the key but the SDK requires one
+            )
+            ai_model = model if model else 'local-model'
+            print(f"AI client initialised → LM Studio @ {host} | model: {ai_model}")
         except Exception as e:
-            print(f"Error initializing OpenAI client: {e}")
+            print(f"Error initialising LM Studio client: {e}")
             openai_client = None
+            ai_model = 'local-model'
     else:
-        openai_client = None
+        api_key = config.get('openaiApiKey', '')
+        ai_model = 'gpt-4o'
+        if api_key:
+            try:
+                openai_client = OpenAI(api_key=api_key)
+                print("AI client initialised → OpenAI | model: gpt-4o")
+            except Exception as e:
+                print(f"Error initialising OpenAI client: {e}")
+                openai_client = None
+        else:
+            openai_client = None
 
 def authorize_creds(creds_path, authorized_creds_path='authorizedcreds.dat'):
     """Authorize and return the Webmasters API service"""
@@ -623,7 +651,7 @@ def get_gpt_insights(content, analysis_type="general"):
                     "content": content
                 }
             ],
-            model="gpt-4o"
+            model=ai_model
         )
         
         response_message = chat_completion.choices[0].message.content
@@ -716,7 +744,12 @@ def get_settings():
         "credentialsPath": config.get('credentialsPath', ''),
         "trendsCredentialsPath": config.get('trendsCredentialsPath', ''),
         "isAuthorized": config.get('isAuthorized', False),
-        "overviewSites": config.get('overviewSites', [])
+        "overviewSites": config.get('overviewSites', []),
+        # AI provider settings
+        "aiProvider": config.get('aiProvider', 'openai'),
+        "lmStudioHost": config.get('lmStudioHost', 'http://localhost:1234'),
+        "lmStudioModel": config.get('lmStudioModel', ''),
+        "lmStudioModels": config.get('lmStudioModels', [])
     })
 
 @app.route('/api/settings', methods=['POST'])
@@ -730,22 +763,35 @@ def save_settings():
         if 'openaiApiKey' in data:
             config['openaiApiKey'] = data['openaiApiKey']
             # Reinitialize OpenAI client with new key
-            initialize_openai_client()
-        
+            # initialize_openai_client()
+
         if 'credentialsPath' in data:
             config['credentialsPath'] = data['credentialsPath']
             config['isAuthorized'] = False
 
         if 'trendsCredentialsPath' in data:
             config['trendsCredentialsPath'] = data['trendsCredentialsPath']
-        
+
         if 'overviewSites' in data:
             # Validate that we don't have more than 6 sites
             overview_sites = data['overviewSites']
             if len(overview_sites) > 6:
                 return jsonify({"error": "Maximum 6 sites allowed for overview"}), 400
             config['overviewSites'] = overview_sites
-        
+
+        # AI provider settings
+        if 'aiProvider' in data:
+            config['aiProvider'] = data['aiProvider']
+        if 'lmStudioHost' in data:
+            config['lmStudioHost'] = data['lmStudioHost']
+        if 'lmStudioModel' in data:
+            config['lmStudioModel'] = data['lmStudioModel']
+        if 'lmStudioModels' in data:
+            config['lmStudioModels'] = data['lmStudioModels']
+
+        # Reinitialise the AI client whenever any AI-related setting changes
+        initialize_ai_client()
+
         # Save config
         if save_config(config):
             return jsonify({
@@ -754,7 +800,11 @@ def save_settings():
                 "openaiApiKey": config.get('openaiApiKey', ''),
                 "credentialsPath": config.get('credentialsPath', ''),
                 "trendsCredentialsPath": config.get('trendsCredentialsPath', ''),
-                "overviewSites": config.get('overviewSites', [])
+                "overviewSites": config.get('overviewSites', []),
+                "aiProvider": config.get('aiProvider', 'openai'),
+                "lmStudioHost": config.get('lmStudioHost', 'http://localhost:1234'),
+                "lmStudioModel": config.get('lmStudioModel', ''),
+                "lmStudioModels": config.get('lmStudioModels', [])
             })
         else:
             return jsonify({"error": "Failed to save settings"}), 500
@@ -817,8 +867,8 @@ def authorize():
 @app.route('/api/settings/clear', methods=['POST'])
 def clear_settings():
     """Clear all authentication and credentials"""
-    global webmasters_service, verified_sites, openai_client
-    
+    global webmasters_service, verified_sites, openai_client, ai_model
+
     try:
         # Delete authorized credentials file
         authorized_creds_path = 'authorizedcreds.dat'
@@ -828,23 +878,28 @@ def clear_settings():
                 print(f"Deleted {authorized_creds_path}")
             except Exception as e:
                 print(f"Error deleting {authorized_creds_path}: {e}")
-        
+
         # Reset global variables
         webmasters_service = None
         verified_sites = []
         openai_client = None
-        
-        # Clear config
+        ai_model = 'gpt-4o'
+
+        # Clear config — preserve AI provider defaults
         config = {
             "openaiApiKey": "",
             "credentialsPath": "",
             "isAuthorized": False,
-            "overviewSites": []
+            "overviewSites": [],
+            "aiProvider": "openai",
+            "lmStudioHost": "http://localhost:1234",
+            "lmStudioModel": "",
+            "lmStudioModels": []
         }
-        
+
         if save_config(config):
-            # Reinitialize OpenAI client (will be None since no key)
-            initialize_openai_client()
+            # Reinitialise AI client (will be None since no key)
+            initialize_ai_client()
             
             return jsonify({
                 "success": True,
@@ -1380,7 +1435,7 @@ Data (Date | GSC Clicks | Google Trends scaled interest):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
             ],
-            model="gpt-4o",
+            model=ai_model,
         )
 
         return jsonify({"insights": chat_completion.choices[0].message.content})
@@ -1389,6 +1444,84 @@ Data (Date | GSC Clicks | Google Trends scaled interest):
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
+# ─── LM Studio helper endpoints ──────────────────────────────────────────────
+
+@app.route('/api/lmstudio/status', methods=['GET'])
+def lmstudio_status():
+    """Check whether LM Studio is reachable at the configured host."""
+    config = load_config()
+    host = config.get('lmStudioHost', 'http://localhost:1234').rstrip('/')
+    try:
+        resp = http_requests.get(f"{host}/v1/models", timeout=3)
+        online = resp.status_code == 200
+    except Exception:
+        online = False
+    return jsonify({"online": online, "host": host})
+
+
+@app.route('/api/lmstudio/models', methods=['GET'])
+def lmstudio_models():
+    """Fetch the list of models from LM Studio and persist to config."""
+    config = load_config()
+    host = config.get('lmStudioHost', 'http://localhost:1234').rstrip('/')
+    try:
+        resp = http_requests.get(f"{host}/v1/models", timeout=5)
+        if resp.status_code != 200:
+            # Return persisted list even if LM Studio is offline
+            return jsonify({
+                "online": False,
+                "models": config.get('lmStudioModels', []),
+                "error": f"LM Studio returned HTTP {resp.status_code}"
+            })
+        data = resp.json()
+        # The /v1/models response shape: { "data": [{"id": "...", ...}] }
+        model_ids = [m.get('id', '') for m in data.get('data', []) if m.get('id')]
+        # Persist the refreshed list to config
+        config['lmStudioModels'] = model_ids
+        save_config(config)
+        return jsonify({"online": True, "models": model_ids})
+    except Exception as e:
+        return jsonify({
+            "online": False,
+            "models": config.get('lmStudioModels', []),
+            "error": str(e)
+        })
+
+
+@app.route('/api/lmstudio/unload', methods=['POST'])
+def lmstudio_unload():
+    """Attempt to unload a model from LM Studio memory."""
+    config = load_config()
+    host = config.get('lmStudioHost', 'http://localhost:1234').rstrip('/')
+    data = request.get_json() or {}
+    model = data.get('model')
+    if not model:
+        return jsonify({"success": True})
+    try:
+        # Standard LM Studio endpoint for unloading
+        resp = http_requests.post(f"{host}/api/v1/models/unload", json={"model": model}, timeout=10)
+        return jsonify({"success": resp.ok, "status": resp.status_code})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route('/api/lmstudio/load', methods=['POST'])
+def lmstudio_load():
+    """Attempt to load a model into LM Studio memory."""
+    config = load_config()
+    host = config.get('lmStudioHost', 'http://localhost:1234').rstrip('/')
+    data = request.get_json() or {}
+    model = data.get('model')
+    if not model:
+        return jsonify({"success": False, "error": "No model specified"}), 400
+    try:
+        # Standard LM Studio endpoint for loading
+        resp = http_requests.post(f"{host}/api/v1/models/load", json={"model": model}, timeout=60)
+        return jsonify({"success": resp.ok, "status": resp.status_code})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
 
 
 @app.route('/api/algo-updates', methods=['GET'])
@@ -1430,8 +1563,8 @@ if __name__ == '__main__':
     
     print("Starting GSC Dashboard Backend...")
     
-    # Initialize OpenAI client
-    initialize_openai_client()
+    # Initialize AI client (OpenAI or LM Studio based on config)
+    initialize_ai_client()
     
     # Initialize GSC service
     init_gsc()
