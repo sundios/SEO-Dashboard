@@ -52,7 +52,17 @@ DEFAULT_SETTINGS = {
     "aiProvider": "openai",          # "openai" | "local_llm"
     "lmStudioHost": "http://localhost:1234",
     "lmStudioModel": "",             # persisted model selection
-    "lmStudioModels": []             # persisted model list
+    "lmStudioModels": [],            # persisted model list
+    # Expert Level Local Model Settings
+    "systemPrompt": "",
+    "contextLength": 8192,
+    "gpuOffload": "max",
+    "temperature": 0.8,
+    "topK": 40,
+    "topP": 0.95,
+    "minP": 0.05,
+    "repeatPenalty": 1.1,
+    "presencePenalty": 0.0
 }
 
 # ─── Google Trends helpers ────────────────────────────────────────────────────
@@ -202,7 +212,19 @@ def ensure_lmstudio_model_loaded(host, model):
 
         # Not loaded, attempt to load
         print(f"⚡ Proactively loading model '{model}' into LM Studio...")
-        load_resp = http_requests.post(f"{host}/api/v1/models/load", json={"model": model}, timeout=60)
+        
+        # Pull expert config to apply at load time
+        config_data = load_config()
+        context_length = int(config_data.get('contextLength', 8192))
+        gpu_offload = config_data.get('gpuOffload', 'max')
+        
+        load_payload = {
+            "model": model,
+            "context_length": context_length,
+            "gpu_offload": gpu_offload
+        }
+        
+        load_resp = http_requests.post(f"{host}/api/v1/models/load", json=load_payload, timeout=60)
         if load_resp.ok:
             print(f"✓ Successfully auto-loaded model '{model}' into LM Studio.")
         else:
@@ -634,6 +656,15 @@ def get_gpt_insights(content, analysis_type="general"):
         return "OpenAI API key not configured. Please set your API key in Settings."
     
     try:
+        config = load_config()
+        custom_prompt = config.get('systemPrompt', '').strip()
+        temperature = float(config.get('temperature', 0.8))
+        top_p = float(config.get('topP', 0.95))
+        presence_penalty = float(config.get('presencePenalty', 0.0))
+        top_k = int(config.get('topK', 40))
+        min_p = float(config.get('minP', 0.05))
+        repeat_penalty = float(config.get('repeatPenalty', 1.1))
+
         if analysis_type == "daily":
             system_content = (
                 "You are an SEO expert analyzing daily Google Search Console performance data. "
@@ -669,6 +700,9 @@ def get_gpt_insights(content, analysis_type="general"):
                 "Keep insights concise and actionable. Focus on specific opportunities and improvements."
             )
 
+        if custom_prompt:
+            system_content = f"{custom_prompt}\n\n{system_content}"
+
         chat_completion = openai_client.chat.completions.create(
             messages=[
                 {
@@ -680,7 +714,15 @@ def get_gpt_insights(content, analysis_type="general"):
                     "content": content
                 }
             ],
-            model=ai_model
+            model=ai_model,
+            temperature=temperature,
+            top_p=top_p,
+            presence_penalty=presence_penalty,
+            extra_body={
+                "top_k": top_k,
+                "min_p": min_p,
+                "repeat_penalty": repeat_penalty
+            }
         )
         
         response_message = chat_completion.choices[0].message.content
@@ -778,7 +820,17 @@ def get_settings():
         "aiProvider": config.get('aiProvider', 'openai'),
         "lmStudioHost": config.get('lmStudioHost', 'http://localhost:1234'),
         "lmStudioModel": config.get('lmStudioModel', ''),
-        "lmStudioModels": config.get('lmStudioModels', [])
+        "lmStudioModels": config.get('lmStudioModels', []),
+        # Expert Settings
+        "systemPrompt": config.get('systemPrompt', ''),
+        "contextLength": config.get('contextLength', 8192),
+        "gpuOffload": config.get('gpuOffload', 'max'),
+        "temperature": config.get('temperature', 0.8),
+        "topK": config.get('topK', 40),
+        "topP": config.get('topP', 0.95),
+        "minP": config.get('minP', 0.05),
+        "repeatPenalty": config.get('repeatPenalty', 1.1),
+        "presencePenalty": config.get('presencePenalty', 0.0)
     })
 
 @app.route('/api/settings', methods=['POST'])
@@ -817,6 +869,12 @@ def save_settings():
             config['lmStudioModel'] = data['lmStudioModel']
         if 'lmStudioModels' in data:
             config['lmStudioModels'] = data['lmStudioModels']
+            
+        # Expert Settings
+        expert_keys = ['systemPrompt', 'contextLength', 'gpuOffload', 'temperature', 'topK', 'topP', 'minP', 'repeatPenalty', 'presencePenalty']
+        for key in expert_keys:
+            if key in data:
+                config[key] = data[key]
 
         # Reinitialise the AI client whenever any AI-related setting changes
         initialize_ai_client()
@@ -1417,6 +1475,15 @@ def trends_insights():
             for u in algo_updates:
                 algo_section += f"- {u['start_date']}: {u['name']} ({u['type']} update)\n"
 
+        config = load_config()
+        custom_prompt = config.get('systemPrompt', '').strip()
+        temperature = float(config.get('temperature', 0.8))
+        top_p = float(config.get('topP', 0.95))
+        presence_penalty = float(config.get('presencePenalty', 0.0))
+        top_k = int(config.get('topK', 40))
+        min_p = float(config.get('minP', 0.05))
+        repeat_penalty = float(config.get('repeatPenalty', 1.1))
+
         system_prompt = """You are a senior SEO analyst interpreting a dual-axis chart that overlays Google Search Console (GSC) click traffic with Google Trends search interest for a website.
 
 Your job is to diagnose what is happening by comparing the two lines, using this diagnostic framework:
@@ -1459,12 +1526,23 @@ Data (Date | GSC Clicks | Google Trends scaled interest):
 {data_rows}
 """
 
+        if custom_prompt:
+            system_prompt = f"{custom_prompt}\n\n{system_prompt}"
+
         chat_completion = openai_client.chat.completions.create(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
             ],
             model=ai_model,
+            temperature=temperature,
+            top_p=top_p,
+            presence_penalty=presence_penalty,
+            extra_body={
+                "top_k": top_k,
+                "min_p": min_p,
+                "repeat_penalty": repeat_penalty
+            }
         )
 
         return jsonify({"insights": chat_completion.choices[0].message.content})
@@ -1561,8 +1639,18 @@ def lmstudio_load():
         except Exception as check_e:
             print(f"Warning: Failed to check if model is already loaded: {check_e}")
 
+        # Pull expert config to apply at load time
+        context_length = int(config.get('contextLength', 8192))
+        gpu_offload = config.get('gpuOffload', 'max')
+        
+        load_payload = {
+            "model": model,
+            "context_length": context_length,
+            "gpu_offload": gpu_offload
+        }
+
         # Standard LM Studio endpoint for loading
-        resp = http_requests.post(f"{host}/api/v1/models/load", json={"model": model}, timeout=60)
+        resp = http_requests.post(f"{host}/api/v1/models/load", json=load_payload, timeout=60)
         return jsonify({"success": resp.ok, "status": resp.status_code})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})

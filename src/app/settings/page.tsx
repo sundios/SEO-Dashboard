@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faFile, faCheckCircle, faExclamationTriangle, faSpinner, faEye, faEyeSlash, faTrash, faServer, faNetworkWired, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faFile, faCheckCircle, faExclamationTriangle, faSpinner, faEye, faEyeSlash, faTrash, faServer, faNetworkWired, faRefresh, faQuestionCircle, faUndo, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useData } from '@/contexts/DataContext';
 import ModelSelector from './model-selector';
 
@@ -16,6 +16,16 @@ interface SettingsData {
   aiProvider: 'openai' | 'local_llm';
   lmStudioHost: string;
   lmStudioModel: string;
+  // Expert Settings
+  systemPrompt?: string;
+  contextLength?: number;
+  gpuOffload?: string;
+  temperature?: number;
+  topK?: number;
+  topP?: number;
+  minP?: number;
+  repeatPenalty?: number;
+  presencePenalty?: number;
 }
 
 export default function SettingsPage() {
@@ -47,7 +57,16 @@ export default function SettingsPage() {
     overviewSites: [],
     aiProvider: 'openai',
     lmStudioHost: 'http://localhost:1234',
-    lmStudioModel: ''
+    lmStudioModel: '',
+    systemPrompt: '',
+    contextLength: 8192,
+    gpuOffload: 'max',
+    temperature: 0.8,
+    topK: 40,
+    topP: 0.95,
+    minP: 0.05,
+    repeatPenalty: 1.1,
+    presencePenalty: 0.0
   });
 
   const [availableSites, setAvailableSites] = useState<string[]>([]);
@@ -91,7 +110,16 @@ export default function SettingsPage() {
           overviewSites: Array.isArray(data.overviewSites) ? data.overviewSites : [],
           aiProvider: data.aiProvider === 'local_llm' ? 'local_llm' : 'openai',
           lmStudioHost: String(data.lmStudioHost || 'http://localhost:1234'),
-          lmStudioModel: String(data.lmStudioModel || '')
+          lmStudioModel: String(data.lmStudioModel || ''),
+          systemPrompt: String(data.systemPrompt || ''),
+          contextLength: Number(data.contextLength || 8192),
+          gpuOffload: String(data.gpuOffload || 'max'),
+          temperature: Number(data.temperature ?? 0.8),
+          topK: Number(data.topK || 40),
+          topP: Number(data.topP ?? 0.95),
+          minP: Number(data.minP ?? 0.05),
+          repeatPenalty: Number(data.repeatPenalty ?? 1.1),
+          presencePenalty: Number(data.presencePenalty ?? 0.0)
         });
         
         // Load LM Studio models if local_llm is configured or selected
@@ -112,6 +140,23 @@ export default function SettingsPage() {
       setMessage({ type: 'error', text: 'Failed to load settings. Make sure the backend is running.' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const resetExpertSettings = () => {
+    if (confirm('Are you sure you want to reset all expert settings back to their defaults?')) {
+      setSettings(prev => ({
+        ...prev,
+        systemPrompt: '',
+        contextLength: 8192,
+        gpuOffload: 'max',
+        temperature: 0.8,
+        topK: 40,
+        topP: 0.95,
+        minP: 0.05,
+        repeatPenalty: 1.1,
+        presencePenalty: 0.0
+      }));
     }
   };
 
@@ -453,6 +498,195 @@ export default function SettingsPage() {
                       Could not connect to LM Studio. Make sure it is running, the local server is started, and the Server URL is correct.
                     </p>
                   )}
+
+                  {/* Expert Level Settings Accordion */}
+                  <details className="mt-6 group border border-gray-200 rounded-lg overflow-hidden bg-white">
+                    <summary className="px-4 py-3 bg-gray-50 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100 flex items-center justify-between select-none">
+                      <div className="flex items-center space-x-2">
+                        <FontAwesomeIcon icon={faServer} className="text-gray-400" />
+                        <span>Expert Level Settings</span>
+                      </div>
+                      <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 group-open:rotate-180 transition-transform duration-200" />
+                    </summary>
+                    <div className="p-4 border-t border-gray-200 space-y-6">
+                      <div className="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-800 flex items-start">
+                        <FontAwesomeIcon icon={faExclamationTriangle} className="text-amber-500 mt-0.5 mr-2" />
+                        <p>
+                          <strong>Warning:</strong> Modifying these settings can drastically alter the AI's behavior, performance, and output quality. 
+                          Only adjust these if you are familiar with LLM inference parameters.
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {/* System Prompt */}
+                        <div className="space-y-1">
+                          <label className="flex items-center text-xs font-medium text-gray-700">
+                            Custom System Prompt Persona
+                            <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="This prompt is injected before the dashboard's built-in SEO instructions to act as a persona or strictly enforce formatting rules." />
+                          </label>
+                          <textarea
+                            value={settings.systemPrompt}
+                            onChange={(e) => setSettings({ ...settings, systemPrompt: e.target.value })}
+                            placeholder="e.g. Act as a ruthless marketing executive..."
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-h-[80px]"
+                          />
+                        </div>
+
+                        {/* Grid for Hardware / Load params */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="flex items-center text-xs font-medium text-gray-700">
+                              Context Length
+                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Maximum number of tokens the model can process at once (input + output). Higher values use more RAM." />
+                            </label>
+                            <input
+                              type="number"
+                              min="512"
+                              step="512"
+                              value={settings.contextLength}
+                              onChange={(e) => setSettings({ ...settings, contextLength: parseInt(e.target.value) || 8192 })}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="flex items-center text-xs font-medium text-gray-700">
+                              GPU Offload
+                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Number of layers to offload to GPU, or 'max' to offload all possible layers. Use 'max' for best performance." />
+                            </label>
+                            <input
+                              type="text"
+                              value={settings.gpuOffload}
+                              onChange={(e) => setSettings({ ...settings, gpuOffload: e.target.value })}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            />
+                          </div>
+                        </div>
+
+                        <hr className="border-gray-200" />
+
+                        {/* Sliders for Inference */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                          {/* Temperature */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Temperature
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Controls randomness. Lower values make output more focused and deterministic, higher values make it more creative." />
+                              </label>
+                              <span className="text-xs text-gray-500 font-mono">{settings.temperature}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0" max="2" step="0.05"
+                              value={settings.temperature}
+                              onChange={(e) => setSettings({ ...settings, temperature: parseFloat(e.target.value) })}
+                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+
+                          {/* Top P */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Top P Sampling
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Nucleus sampling. Limits token choices to a percentage of total probability mass. 1.0 means no limit." />
+                              </label>
+                              <span className="text-xs text-gray-500 font-mono">{settings.topP}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0" max="1" step="0.01"
+                              value={settings.topP}
+                              onChange={(e) => setSettings({ ...settings, topP: parseFloat(e.target.value) })}
+                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+
+                          {/* Min P */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Min P Sampling
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Sets a minimum probability threshold relative to the most likely token. Helps prevent outputting nonsense tokens." />
+                              </label>
+                              <span className="text-xs text-gray-500 font-mono">{settings.minP}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0" max="1" step="0.01"
+                              value={settings.minP}
+                              onChange={(e) => setSettings({ ...settings, minP: parseFloat(e.target.value) })}
+                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+
+                          {/* Top K */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Top K Sampling
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Limits token choices to the top K most likely tokens. A value of 0 or -1 typically disables it." />
+                              </label>
+                              <input
+                                type="number"
+                                min="-1"
+                                value={settings.topK}
+                                onChange={(e) => setSettings({ ...settings, topK: parseInt(e.target.value) })}
+                                className="w-20 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Repeat Penalty */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Repeat Penalty
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Penalizes tokens that have already appeared. 1.0 means no penalty. Higher values reduce repetition." />
+                              </label>
+                              <span className="text-xs text-gray-500 font-mono">{settings.repeatPenalty}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="1" max="2" step="0.05"
+                              value={settings.repeatPenalty}
+                              onChange={(e) => setSettings({ ...settings, repeatPenalty: parseFloat(e.target.value) })}
+                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+
+                          {/* Presence Penalty */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <label className="flex items-center text-xs font-medium text-gray-700">
+                                Presence Penalty
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Penalizes tokens based on whether they've appeared at all. Increases likelihood of bringing up new topics." />
+                              </label>
+                              <span className="text-xs text-gray-500 font-mono">{settings.presencePenalty}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="-2" max="2" step="0.1"
+                              value={settings.presencePenalty}
+                              onChange={(e) => setSettings({ ...settings, presencePenalty: parseFloat(e.target.value) })}
+                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-4 border-t border-gray-100 mt-6">
+                        <button
+                          type="button"
+                          onClick={resetExpertSettings}
+                          className="flex items-center text-xs font-medium text-gray-500 hover:text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
+                        >
+                          <FontAwesomeIcon icon={faUndo} className="mr-1.5" />
+                          Reset to Defaults
+                        </button>
+                      </div>
+                    </div>
+                  </details>
                 </div>
               )}
             </div>
