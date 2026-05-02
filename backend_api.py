@@ -185,6 +185,31 @@ def initialize_openai_client():
     """Backward-compatible shim — delegates to initialize_ai_client()."""
     initialize_ai_client()
 
+def ensure_lmstudio_model_loaded(host, model):
+    """Proactively checks if the specified model is loaded in LM Studio, and loads it if not."""
+    if not model:
+        return
+    print(f"Checking if LM Studio model '{model}' needs loading...")
+    try:
+        # Check if already loaded
+        models_resp = http_requests.get(f"{host}/api/v1/models", timeout=5)
+        if models_resp.status_code == 200:
+            for m in models_resp.json().get('models', []):
+                if m.get('key') == model or m.get('id') == model:
+                    if len(m.get('loaded_instances', [])) > 0:
+                        print(f"✓ Model '{model}' is already active in LM Studio.")
+                        return
+
+        # Not loaded, attempt to load
+        print(f"⚡ Proactively loading model '{model}' into LM Studio...")
+        load_resp = http_requests.post(f"{host}/api/v1/models/load", json={"model": model}, timeout=60)
+        if load_resp.ok:
+            print(f"✓ Successfully auto-loaded model '{model}' into LM Studio.")
+        else:
+            print(f"✗ Failed to auto-load model '{model}': HTTP {load_resp.status_code}")
+    except Exception as e:
+        print(f"Warning: Could not auto-load LM Studio model. Make sure LM Studio is running at {host}. Error: {e}")
+
 def initialize_ai_client():
     """Initialize the AI client based on the configured provider (OpenAI or LM Studio)."""
     global openai_client, ai_model
@@ -201,6 +226,10 @@ def initialize_ai_client():
             )
             ai_model = model if model else 'local-model'
             print(f"AI client initialised → LM Studio @ {host} | model: {ai_model}")
+            
+            # Auto-load the model seamlessly if it isn't already loaded
+            ensure_lmstudio_model_loaded(host, model)
+            
         except Exception as e:
             print(f"Error initialising LM Studio client: {e}")
             openai_client = None
