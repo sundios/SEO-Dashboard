@@ -1853,9 +1853,9 @@ export default function Dashboard() {
 
           {/* Table Component */}
           {currentTableData.length > 0 ? (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
               <div className="flex items-center justify-between px-4 pt-4 mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-300">
                   {activeTab === 'queries' ? 'Top Keywords' : 'Top Pages'}
                 </h3>
                 <div className="flex items-center space-x-3">
@@ -1890,7 +1890,7 @@ export default function Dashboard() {
                 showSearch={false}
                 showAdvancedFilters={true}
                 pageSize={20}
-                className="bg-white"
+                className="bg-white dark:bg-zinc-900"
               />
               
               {/* Query Insights Display */}
@@ -1929,12 +1929,12 @@ export default function Dashboard() {
               
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
               <div className="text-center py-8">
-                <div className="text-4xl mb-4 text-gray-400">
+                <div className="text-4xl mb-4 text-gray-400 dark:text-zinc-500">
                   <FontAwesomeIcon icon={activeTab === 'queries' ? faMagnifyingGlass : faMapPin} />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-zinc-300 mb-2">
                   No {activeTab === 'queries' ? 'Queries' : 'Pages'} Data
                 </h3>
                 <p className="text-gray-600">

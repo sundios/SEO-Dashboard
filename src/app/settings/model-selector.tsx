@@ -58,7 +58,7 @@ export const                                                                    
           w-full px-4 py-2 text-left rounded-md border
           ${disabled 
             ? 'bg-muted/50 cursor-not-allowed opacity-70' 
-            : 'bg-background hover:bg-accent/50 cursor-pointer'
+            : 'bg-zinc-950 hover:bg-zinc-800 cursor-pointer'
           }
           flex items-center justify-between transition-colors
           border-input
@@ -87,7 +87,7 @@ export const                                                                    
             transition={{ duration: 0.2 }}
             className={`
               absolute z-50 w-full mt-1 rounded-md border
-              bg-popover text-popover-foreground shadow-lg
+              bg-zinc-950 text-popover-foreground shadow-lg
               max-h-60 overflow-auto
               border-border
             `}
@@ -110,7 +110,7 @@ export const                                                                    
                     onClick={() => handleSelect(model)}
                     className={`
                       w-full px-4 py-2 text-left text-sm
-                      hover:bg-accent hover:text-accent-foreground
+                      hover:bg-zinc-800 hover:text-accent-foreground
                       flex items-center justify-between
                       ${value === model.id ? 'bg-accent/50' : ''}
                     `}

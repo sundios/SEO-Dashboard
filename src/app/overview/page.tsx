@@ -318,7 +318,7 @@ export default function OverviewPage() {
                 display: false
               },
               grid: {
-                color: '#E5E7EB'
+                color: '#09090b'
               }
             },
             y: {
@@ -331,7 +331,7 @@ export default function OverviewPage() {
                 color: '#3B82F6'
               },
               grid: {
-                color: '#E5E7EB'
+                color: '#09090b'
               }
             },
             y1: {
@@ -459,7 +459,7 @@ export default function OverviewPage() {
 
         {/* Loading State */}
         {overviewLoading && topSites.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded p-8 text-center mb-6">
+          <div className="bg-blue-500/10 border border-blue-800 rounded p-8 text-center mb-6">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
             <p className="text-blue-800">Loading overview data for top {topSites.length} sites...</p>
           </div>
@@ -509,29 +509,29 @@ export default function OverviewPage() {
         {/* Overview Charts - Full Width */}
         <div className="grid grid-cols-1 gap-6">
           {overviewData.map((siteData, index) => (
-            <div key={index} className="bg-white rounded-lg shadow p-6">
+            <div key={index} className="bg-white dark:bg-background rounded-lg shadow p-6">
               {/* Site Header with Stats */}
               <div className="mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3" title={siteData.site}>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-zinc-300 mb-3" title={siteData.site}>
                   {getSiteName(siteData.site)}
                 </h3>
                 {siteData.data && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="bg-blue-50 dark:bg-blue-500/10 dark:border dark:border-blue-800 p-3 rounded-lg">
                       <div className="text-blue-600 font-medium text-sm">Total Clicks</div>
                       <div className="text-lg font-bold text-blue-800">{formatNumber(siteData.data.totalClicks)}</div>
                     </div>
-                    <div className="bg-green-50 p-3 rounded-lg">
-                      <div className="text-green-600 font-medium text-sm">Total Impressions</div>
+                    <div className="bg-green-50 dark:bg-emerald-500/10 dark:border dark:border-emerald-800 p-3 rounded-lg">
+                      <div className="text-emerald-600 font-medium text-sm">Total Impressions</div>
                       <div className="text-lg font-bold text-green-800">{formatNumber(siteData.data.totalImpressions)}</div>
                     </div>
-                    <div className="bg-orange-50 p-3 rounded-lg">
-                      <div className="text-orange-600 font-medium text-sm">Average CTR</div>
-                      <div className="text-lg font-bold text-orange-800">{(siteData.data.avgCtr * 100).toFixed(2)}%</div>
+                    <div className="bg-orange-50 dark:bg-amber-500/10 dark:border dark:border-amber-800 p-3 rounded-lg">
+                      <div className="text-amber-600 font-medium text-sm">Average CTR</div>
+                      <div className="text-lg font-bold text-amber-800">{(siteData.data.avgCtr * 100).toFixed(2)}%</div>
                     </div>
-                    <div className="bg-red-50 p-3 rounded-lg">
-                      <div className="text-red-600 font-medium text-sm">Average Position</div>
-                      <div className="text-lg font-bold text-red-800">{siteData.data.avgPosition.toFixed(1)}</div>
+                    <div className="bg-red-50 dark:bg-rose-500/10 dark:border dark:border-rose-800 p-3 rounded-lg">
+                      <div className="text-rose-600 font-medium text-sm">Average Position</div>
+                      <div className="text-lg font-bold text-rose-800">{siteData.data.avgPosition.toFixed(1)}</div>
                     </div>
                   </div>
                 )}
@@ -547,7 +547,7 @@ export default function OverviewPage() {
                     className="w-full h-full"
                   />
                 ) : (
-                  <div className="h-full flex items-center justify-center text-gray-400">
+                  <div className="h-full flex items-center justify-center text-gray-400 dark:text-zinc-300">
                     <div className="text-center">
                       <div className="text-2xl mb-2">📊</div>
                       <div>No data available for this time period</div>
@@ -561,12 +561,12 @@ export default function OverviewPage() {
 
         {/* Legend and Instructions */}
         {overviewData.length > 0 && (
-          <div className="mt-6 bg-white rounded-lg shadow p-6">
+          <div className="mt-6 bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4">📖 Chart Legend & Instructions</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Chart Elements:</h4>
-                <ul className="space-y-2 text-sm text-gray-700">
+                <h4 className="font-medium text-gray-900 dark:text-zinc-300 mb-3">Chart Elements:</h4>
+                <ul className="space-y-2 text-sm text-gray-700 dark:text-zinc-500">
                   <li className="flex items-center gap-2">
                     <div className="w-4 h-0.5 bg-blue-500"></div>
                     <span><strong>Blue Line:</strong> Clicks (left axis)</span>
@@ -590,8 +590,8 @@ export default function OverviewPage() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">How to Use:</h4>
-                <ul className="space-y-1 text-sm text-gray-700">
+                <h4 className="font-medium text-gray-900 dark:text-zinc-300 mb-3">How to Use:</h4>
+                <ul className="space-y-1 text-sm text-gray-700 dark:text-zinc-500">
                   <li>• <strong>Time Period:</strong> Adjust to view different date ranges (up to 16 months)</li>
                   <li>• <strong>Device Filter:</strong> Focus on specific device performance</li>
                   <li>• <strong>Secondary Metrics:</strong> Overlay CTR or Position trends</li>
