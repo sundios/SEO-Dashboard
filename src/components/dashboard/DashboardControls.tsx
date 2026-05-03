@@ -81,13 +81,13 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Site Selection */}
           <div className="lg:col-span-3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Website
             </label>
             <select
               value={selectedSite}
               onChange={(e) => onSiteChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
             >
               <option value="">Select a website</option>
               {sites.map((site) => (
@@ -100,13 +100,13 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           {/* Device Selection */}
           {onDeviceChange && (
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Device Type
               </label>
               <select
                 value={device}
                 onChange={(e) => onDeviceChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
               >
                 {deviceOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -118,13 +118,13 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           )}
           {/* Date Range Presets */}
           <div className={onDeviceChange ? "lg:col-span-2" : "lg:col-span-3"}>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Quick Ranges
             </label>
             <select
               value={selectedPreset}
               onChange={(e) => onPresetChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
             >
               <option value="">Custom Range</option>
               {dateRangePresets.map((preset) => (
@@ -136,26 +136,26 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           </div>
           {/* Start Date */}
           <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Start Date
             </label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => onStartDateChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
             />
           </div>
           {/* End Date */}
           <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               End Date
             </label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => onEndDateChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
             />
           </div>
           {/* Fetch All Toggle */}
@@ -165,11 +165,11 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
                 type="checkbox"
                 checked={fetchAll}
                 onChange={(e) => onFetchAllChange(e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 bg-white"
+                className="w-4 h-4 text-blue-600 border-gray-300 dark:border-zinc-600 rounded focus:ring-blue-500 bg-white dark:bg-zinc-800"
               />
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-gray-700 dark:text-gray-300">
                 Fetch All Rows
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-gray-500 dark:text-gray-400">
                   {fetchAll ? 'Get complete dataset (slower)' : 'Limit to 25k rows (faster)'}
                 </div>
               </span>
@@ -177,12 +177,12 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           </div>
         </div>
         {/* Advanced Filter Controls as Dropdown */}
-        <div className="border-t border-gray-200 pt-4">
+        <div className="border-t border-gray-200 dark:border-zinc-700 pt-4">
           <Button
             type="button"
             onClick={() => setShowAdvanced((v) => !v)}
             variant="ghost"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-3 hover:text-blue-600"
+            className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 hover:text-blue-600 dark:hover:text-blue-400"
             aria-expanded={showAdvanced}
           >
             <span>Advanced Filters</span>
@@ -192,7 +192,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 animate-fade-in">
               {/* Filter Dimension */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Filter By
                 </label>
                 <select
@@ -201,7 +201,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
                     ...advancedFilter,
                     dimension: e.target.value as any
                   })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                 >
                   <option value="">No Filter</option>
                   <option value="query">Query</option>
@@ -212,7 +212,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
               </div>
               {/* Filter Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Match Type
                 </label>
                 <select
@@ -222,7 +222,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
                     type: e.target.value as any
                   })}
                   disabled={!advancedFilter.dimension}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white disabled:bg-gray-100 dark:disabled:bg-zinc-800/50"
                 >
                   <option value="contains">Contains</option>
                   <option value="exact">Exact Match</option>
@@ -231,7 +231,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
               </div>
               {/* Filter Value */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Filter Value
                 </label>
                 <input
@@ -243,7 +243,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
                   })}
                   disabled={!advancedFilter.dimension}
                   placeholder={advancedFilter.dimension ? `Enter ${advancedFilter.dimension}...` : 'Select filter type first'}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white disabled:bg-gray-100 dark:disabled:bg-zinc-800/50"
                 />
               </div>
               {/* Clear Filter */}
@@ -277,9 +277,9 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           )}
           {/* Active Filter Display */}
           {showAdvanced && advancedFilter.dimension && advancedFilter.value && (
-            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 rounded-lg">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-blue-800">
+                <span className="text-sm text-blue-800 dark:text-blue-300">
                   <strong>Active Filter:</strong> {advancedFilter.dimension} {advancedFilter.type.replace('-', ' ')} "{advancedFilter.value}"
                 </span>
                 <Button
@@ -296,7 +296,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
           )}
         </div>
         {/* Legacy Load Data Button (for backwards compatibility) */}
-        <div className="border-t pt-4 lg:hidden">
+        <div className="border-t border-gray-200 dark:border-zinc-700 pt-4 lg:hidden">
           <Button
             type="button"
             onClick={onFetchData}

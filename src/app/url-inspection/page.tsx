@@ -129,7 +129,7 @@ export default function UrlInspectionPage() {
     if (lowerVerdict.includes('warning') || lowerVerdict.includes('partial')) {
       return 'text-yellow-600';
     }
-    return 'text-gray-600';
+    return 'text-gray-600 dark:text-zinc-500';
   };
 
   const getVerdictIcon = (verdict?: string) => {
@@ -155,11 +155,11 @@ export default function UrlInspectionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-zinc-300 mb-2">
             🔍 URL Inspection
           </h1>
           <p className="text-gray-600">
@@ -168,19 +168,19 @@ export default function UrlInspectionPage() {
         </div>
 
         {/* Input Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Inspect URL</h2>
           
           <div className="space-y-4">
             <div>
-              <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Site ({sites.length} available)
               </label>
               <select
                 id="site-select"
                 value={selectedSite}
                 onChange={(e) => setSelectedSite(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 p-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
@@ -192,7 +192,7 @@ export default function UrlInspectionPage() {
             </div>
 
             <div>
-              <label htmlFor="url-input" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="url-input" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 URL to Inspect
               </label>
               <input
@@ -201,7 +201,7 @@ export default function UrlInspectionPage() {
                 value={inspectionUrl}
                 onChange={(e) => setInspectionUrl(e.target.value)}
                 placeholder="https://example.com/page"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 p-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter' && !loading) {
                     handleInspect();
@@ -213,7 +213,7 @@ export default function UrlInspectionPage() {
             <Button
               onClick={handleInspect}
               disabled={loading || !inspectionUrl.trim() || !selectedSite}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-400 dark:disabled:bg-zinc-700 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -232,30 +232,30 @@ export default function UrlInspectionPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="bg-red-50 dark:bg-rose-500/10 dark:border-rose-500 border dark:text-rose-600 border-red-200 rounded-lg p-4 mb-6">
             <div className="flex items-center">
-              <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 mr-2" />
-              <p className="text-red-800">{error}</p>
+              <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 dark:text-rose-600 mr-2" />
+              <p className="text-red-800 dark:text-rose-600">{error}</p>
             </div>
           </div>
         )}
 
         {/* Results Display */}
         {result && result.inspectionResult && (
-          <div className="bg-white rounded-lg shadow p-6 space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Inspection Results</h2>
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 space-y-6">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-zinc-300">Inspection Results</h2>
 
             {/* Index Status Result */}
             {result.inspectionResult.indexStatusResult && (
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <div className="border border-gray-200 dark:border-zinc-700 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-500 mb-4 flex items-center">
                   <FontAwesomeIcon icon={faInfoCircle} className="mr-2 text-blue-600" />
                   Index Status
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Verdict</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Verdict</p>
                     <div className="flex items-center">
                       <FontAwesomeIcon 
                         icon={getVerdictIcon(result.inspectionResult.indexStatusResult.verdict)} 
@@ -268,57 +268,57 @@ export default function UrlInspectionPage() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Coverage State</p>
-                    <p className="text-gray-900">{result.inspectionResult.indexStatusResult.coverageState || 'N/A'}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Coverage State</p>
+                    <p className="text-gray-900 dark:text-zinc-500">{result.inspectionResult.indexStatusResult.coverageState || 'N/A'}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Indexing State</p>
-                    <p className="text-gray-900">{result.inspectionResult.indexStatusResult.indexingState || 'N/A'}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Indexing State</p>
+                    <p className="text-gray-900 dark:text-zinc-500">{result.inspectionResult.indexStatusResult.indexingState || 'N/A'}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Page Fetch State</p>
-                    <p className="text-gray-900">{result.inspectionResult.indexStatusResult.pageFetchState || 'N/A'}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Page Fetch State</p>
+                    <p className="text-gray-900 dark:text-zinc-500">{result.inspectionResult.indexStatusResult.pageFetchState || 'N/A'}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Last Crawl Time</p>
-                    <p className="text-gray-900">{formatDate(result.inspectionResult.indexStatusResult.lastCrawlTime)}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Last Crawl Time</p>
+                    <p className="text-gray-900 dark:text-zinc-500">{formatDate(result.inspectionResult.indexStatusResult.lastCrawlTime)}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Robots.txt State</p>
-                    <p className="text-gray-900">{result.inspectionResult.indexStatusResult.robotsTxtState || 'N/A'}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Robots.txt State</p>
+                    <p className="text-gray-900 dark:text-zinc-500">{result.inspectionResult.indexStatusResult.robotsTxtState || 'N/A'}</p>
                   </div>
 
                   {result.inspectionResult.indexStatusResult.googleCanonical && (
                     <div>
-                      <p className="text-sm font-medium text-gray-700 mb-1">Google Canonical</p>
-                      <p className="text-gray-900 break-all">{result.inspectionResult.indexStatusResult.googleCanonical}</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Google Canonical</p>
+                      <p className="text-gray-900 dark:text-zinc-500 break-all">{result.inspectionResult.indexStatusResult.googleCanonical}</p>
                     </div>
                   )}
 
                   {result.inspectionResult.indexStatusResult.userCanonical && (
                     <div>
-                      <p className="text-sm font-medium text-gray-700 mb-1">User Canonical</p>
-                      <p className="text-gray-900 break-all">{result.inspectionResult.indexStatusResult.userCanonical}</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">User Canonical</p>
+                      <p className="text-gray-900 dark:text-zinc-500 break-all">{result.inspectionResult.indexStatusResult.userCanonical}</p>
                     </div>
                   )}
 
                   {result.inspectionResult.indexStatusResult.crawledAs && (
                     <div>
-                      <p className="text-sm font-medium text-gray-700 mb-1">Crawled As</p>
-                      <p className="text-gray-900">{result.inspectionResult.indexStatusResult.crawledAs}</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Crawled As</p>
+                      <p className="text-gray-900 dark:text-zinc-500">{result.inspectionResult.indexStatusResult.crawledAs}</p>
                     </div>
                   )}
 
                   {result.inspectionResult.indexStatusResult.referringUrls && result.inspectionResult.indexStatusResult.referringUrls.length > 0 && (
                     <div className="md:col-span-2">
-                      <p className="text-sm font-medium text-gray-700 mb-1">Referring URLs</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">Referring URLs</p>
                       <ul className="list-disc list-inside space-y-1">
                         {result.inspectionResult.indexStatusResult.referringUrls.map((url, index) => (
-                          <li key={index} className="text-gray-900 break-all">{url}</li>
+                          <li key={index} className="text-gray-900 dark:text-zinc-500 break-all">{url}</li>
                         ))}
                       </ul>
                     </div>
@@ -385,7 +385,7 @@ export default function UrlInspectionPage() {
             {/* Mobile Usability Result */}
             {result.inspectionResult.mobileUsabilityResult && (
               <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Mobile Usability</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-500 mb-4">Mobile Usability</h3>
                 
                 <div className="space-y-3">
                   <div>
@@ -421,12 +421,12 @@ export default function UrlInspectionPage() {
 
             {/* Rich Results Result */}
             {result.inspectionResult.richResultsResult && (
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Rich Results</h3>
+              <div className="border border-gray-200 dark:border-zinc-700 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-500 mb-4">Rich Results</h3>
                 
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">Verdict</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-500 mb-1">Verdict</p>
                     <div className="flex items-center">
                       <FontAwesomeIcon 
                         icon={getVerdictIcon(result.inspectionResult.richResultsResult.verdict)} 
@@ -443,8 +443,8 @@ export default function UrlInspectionPage() {
                       <p className="text-sm font-medium text-gray-600 mb-2">Detected Items</p>
                       <div className="space-y-4">
                         {result.inspectionResult.richResultsResult.detectedItems.map((item, index) => (
-                          <div key={index} className="bg-blue-50 border border-blue-200 rounded p-3">
-                            <p className="text-sm font-semibold text-gray-800 mb-2">
+                          <div key={index} className="bg-blue-50 border border-blue-200 dark:border-zinc-700 dark:bg-zinc-800 rounded p-3">
+                            <p className="text-sm font-semibold text-gray-800 dark:text-zinc-500 mb-2">
                               Type: {item.richResultType || 'Unknown'}
                             </p>
                             {item.items && item.items.length > 0 && (

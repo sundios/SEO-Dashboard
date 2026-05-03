@@ -5,6 +5,8 @@ import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 import AuthBanner from "@/components/layout/AuthBanner";
 import { DataProvider } from "@/contexts/DataContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { MotionGrid } from "@/components/scrollx/motion-grid-bg";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,30 +21,35 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-gray-50`}>
-        <DataProvider>
-          {/* Authentication Banner */}
-          <AuthBanner />
-          
-          <div className="flex h-screen overflow-hidden">
-            {/* Sidebar */}
-            <Sidebar />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} bg-gray-50 dark:bg-background/50 text-zinc-900 dark:text-zinc-50 transition-colors duration-200 overflow-x-hidden overflow-y-hidden`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <DataProvider>
+            {/* Authentication Banner */}
+            <AuthBanner />
             
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-              {/* Header */}
-              <Header />
+            <div className="flex h-screen overflow-hidden">
+              {/* Sidebar */}
+              <Sidebar />
               
-              {/* Page Content */}
-              <main className="flex-1 overflow-auto bg-gray-50">
-                <div className="p-6">
-                  {children}
-                </div>
-              </main>
+              {/* Main Content */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Header */}
+                <Header />
+                
+                {/* Page Content */}
+                <main className="flex-1 overflow-auto custom-scrollbar bg-gray-50 dark:bg-background text-zinc-900 dark:text-zinc-50 transition-colors duration-200">
+                  {/* <MotionGrid speed="3s" opacity={0.15} enableGlow={true} lineColor="20, 184, 166" className="relative h-[100vh] w-full flex flex-col items-center justify-center z-1"> */}
+                  <div className="p-6">
+                    {children}
+                  </div>
+                  {/* </MotionGrid> */}
+                </main>
+              </div>
             </div>
-          </div>
-        </DataProvider>
+          </DataProvider>
+        </ThemeProvider>
+        
       </body>
     </html>
   );

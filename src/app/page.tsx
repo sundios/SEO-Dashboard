@@ -1553,10 +1553,10 @@ export default function Dashboard() {
       {/* Page Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Traffic Performance</h1>
-          <p className="text-gray-600 mt-2">Monitor your website's search performance with real-time insights</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Traffic Performance</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Monitor your website's search performance with real-time insights</p>
           {performanceData && (
-            <div className="mt-2 flex items-center space-x-2 text-sm text-blue-600">
+            <div className="mt-2 flex items-center space-x-2 text-sm text-blue-600 dark:text-blue-400">
               <FontAwesomeIcon icon={faDownload} />
               <span>Data cached - showing results for {performanceData.site} from {performanceData.startDate} to {performanceData.endDate}</span>
             </div>
@@ -1604,12 +1604,12 @@ export default function Dashboard() {
 
       {/* Error Display */}
       {error && (
-        <div className="border-red-200 bg-red-50 rounded-lg p-4">
+        <div className="border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
           <div className="flex items-center space-x-3">
-            <span className="text-red-500"><FontAwesomeIcon icon={faExclamationTriangle} /></span>
+            <span className="text-red-500 dark:text-red-400"><FontAwesomeIcon icon={faExclamationTriangle} /></span>
             <div>
-              <h3 className="text-red-800 font-medium">Error</h3>
-              <p className="text-red-700 text-sm">{error}</p>
+              <h3 className="text-red-800 dark:text-red-300 font-medium">Error</h3>
+              <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
             </div>
           </div>
         </div>
@@ -1643,21 +1643,21 @@ export default function Dashboard() {
 
       {/* Chart Section */}
       {data?.dailyData && data.dailyData.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 border dark:border-zinc-800">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">Daily Performance Trends</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Daily Performance Trends</h3>
+              <p className="text-gray-600 dark:text-gray-400">
                 Showing {data.dailyData.length} days of data from {startDate} to {endDate}
               </p>
             </div>
             <div className="flex items-center space-x-3">
-              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={showAlgorithmUpdates}
                   onChange={e => setShowAlgorithmUpdates(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+                  className="w-4 h-4 text-blue-600 border-gray-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-800"
                 />
                 Show Algorithm Updates
               </label>
@@ -1688,29 +1688,29 @@ export default function Dashboard() {
           
           {/* Daily Insights Display */}
           {showInsights.daily && insights.daily && (
-            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800/50">
               <div className="flex justify-between items-start mb-4">
-                <h4 className="text-lg font-medium text-blue-900">AI Performance Analysis</h4>
+                <h4 className="text-lg font-medium text-blue-900 dark:text-blue-100">AI Performance Analysis</h4>
                 <Button
                   onClick={() => setShowInsights({...showInsights, daily: false})}
                   variant="ghost"
                   size="icon"
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                 >
                   ×
                 </Button>
               </div>
-              <div className="prose prose-blue max-w-none text-blue-800">
+              <div className="prose prose-blue dark:prose-invert max-w-none text-blue-800 dark:text-blue-200">
                 <ReactMarkdown
                   components={{
-                    h1: ({children}) => <h1 className="text-xl font-bold mb-3 text-blue-900">{children}</h1>,
-                    h2: ({children}) => <h2 className="text-lg font-semibold mb-2 text-blue-900">{children}</h2>,
-                    h3: ({children}) => <h3 className="text-base font-medium mb-2 text-blue-800">{children}</h3>,
-                    p: ({children}) => <p className="mb-3 text-blue-800">{children}</p>,
+                    h1: ({children}) => <h1 className="text-xl font-bold mb-3 text-blue-900 dark:text-blue-100">{children}</h1>,
+                    h2: ({children}) => <h2 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">{children}</h2>,
+                    h3: ({children}) => <h3 className="text-base font-medium mb-2 text-blue-800 dark:text-blue-200">{children}</h3>,
+                    p: ({children}) => <p className="mb-3 text-blue-800 dark:text-blue-200">{children}</p>,
                     ul: ({children}) => <ul className="list-disc list-inside mb-3 space-y-1">{children}</ul>,
                     ol: ({children}) => <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>,
-                    li: ({children}) => <li className="text-blue-800">{children}</li>,
-                    strong: ({children}) => <strong className="font-semibold text-blue-900">{children}</strong>,
+                    li: ({children}) => <li className="text-blue-800 dark:text-blue-200">{children}</li>,
+                    strong: ({children}) => <strong className="font-semibold text-blue-900 dark:text-blue-100">{children}</strong>,
                     em: ({children}) => <em className="italic">{children}</em>,
                   }}
                 >
@@ -1726,8 +1726,8 @@ export default function Dashboard() {
       {data && (topQueries.length > 0 || topPages.length > 0 || topCountries.length > 0) && (
         <div className="space-y-4">
           {/* Tab Navigation */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center space-x-1 border-b border-gray-200">
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 border dark:border-zinc-800">
+            <div className="flex items-center space-x-1 border-b border-gray-200 dark:border-zinc-800">
               <button
                 onClick={() => {
                   setActiveTab('queries');
@@ -1962,12 +1962,12 @@ export default function Dashboard() {
 
       {/* Empty State */}
       {!data && !performanceLoading && !error && (
-        <div className="bg-white rounded-lg shadow p-6 text-center py-12">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 text-center py-12">
           <div className="text-6xl mb-4 text-gray-400">
             <FontAwesomeIcon icon={faChartLine} />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Ready to Analyze!</h3>
-          <p className="text-gray-600 mb-6">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-zinc-300 mb-2">Ready to Analyze!</h3>
+          <p className="text-gray-600 dark:text-zinc-500 mb-6">
             Select a website and date range to view your GSC analytics with daily trends
           </p>
           <Button 

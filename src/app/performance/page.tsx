@@ -305,16 +305,16 @@ export default function PerformancePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen  bg-gray-50 dark:bg-zinc-950 p-6">
+      <div className="max-w-7xl mx-auto dark:bg-zinc-900 p-3 rounded-md shadow-sm">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center ">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-zinc-300 mb-2">
                 📊 Performance Correlation Matrix
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-zinc-500">
                 Analyze relationships between GSC metrics with correlation scatter plots
               </p>
               {performanceData && performanceData.dimensions === 'query' && (
@@ -327,7 +327,7 @@ export default function PerformancePage() {
             <button
               onClick={handleRefreshData}
               disabled={performanceLoading || !selectedSite}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-zinc-950 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
             >
               <span>🔄</span>
               <span>{performanceLoading ? 'Loading...' : 'Refresh Data'}</span>
@@ -336,18 +336,18 @@ export default function PerformancePage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-white dark:bg-zinc-950/30 rounded-lg shadow p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Controls</h2>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
-              <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Website ({sites.length} available)
               </label>
               <select 
                 id="site-select" 
                 onChange={(e) => setSelectedSite(e.target.value)} 
                 value={selectedSite}
-                className="w-full p-2 border rounded"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800"
               >
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
@@ -358,14 +358,14 @@ export default function PerformancePage() {
               </select>
             </div>
             <div>
-              <label htmlFor="device-select" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="device-select" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Device Type
               </label>
               <select 
                 id="device-select" 
                 onChange={(e) => setDevice(e.target.value)} 
                 value={device}
-                className="w-full p-2 border rounded"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800"
               >
                 <option value="all">All Devices</option>
                 <option value="desktop">Desktop</option>
@@ -374,7 +374,7 @@ export default function PerformancePage() {
               </select>
             </div>
             <div>
-              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Start Date
               </label>
               <input
@@ -382,11 +382,11 @@ export default function PerformancePage() {
                 id="start-date" 
                 value={startDate} 
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800"
               />
             </div>
             <div>
-              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 End Date
               </label>
               <input
@@ -394,7 +394,7 @@ export default function PerformancePage() {
                 id="end-date" 
                 value={endDate} 
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800"
               />
             </div>
             <div className="flex items-end">
@@ -427,7 +427,7 @@ export default function PerformancePage() {
 
         {/* Correlation Matrix */}
         {data && data.rows && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Correlation Matrix</h2>
               <div className="text-sm text-gray-600">
@@ -436,7 +436,7 @@ export default function PerformancePage() {
             </div>
             
             {/* Legend */}
-            <div className="mb-6 p-4 bg-gray-50 rounded">
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-zinc-950 rounded-lg">
               <h3 className="font-medium mb-2">Correlation Strength:</h3>
               <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -492,7 +492,7 @@ export default function PerformancePage() {
                   <div key={`row-${yMetric}`} className="grid grid-cols-5 gap-4 mb-4">
                     {/* Row header (Y-axis) */}
                     <div className="flex items-center justify-center">
-                      <div className="bg-green-100 px-2 py-1 rounded text-sm font-medium text-green-800 text-center min-h-[48px] flex flex-col justify-center">
+                      <div className="bg-green-100 dark:bg-green-500/5 border-green-800 border px-2 py-1 rounded text-sm font-medium text-green-800 text-center min-h-[48px] flex flex-col justify-center">
                         <div>{metricLabels[yMetric]}</div>
                         <div className="text-xs text-gray-500">↑ Y-axis</div>
                       </div>
@@ -508,7 +508,7 @@ export default function PerformancePage() {
                           className="w-full h-80 border border-gray-200 rounded"
                         />
                         {/* Chart description overlay */}
-                        <div className="absolute top-1 right-1 bg-white bg-opacity-90 px-1 py-0.5 rounded text-xs text-gray-600">
+                        <div className="absolute top-1 right-1 bg-white/10 bg-opacity-10 dark:bg-black/30 px-1 py-0.5 rounded text-xs text-gray-600">
                           {xMetric === yMetric ? 
                             'Distribution' : 
                             `${metricLabels[yMetric]} vs ${metricLabels[xMetric]}`
@@ -525,9 +525,9 @@ export default function PerformancePage() {
             {data && (
               <div className="mt-6 space-y-4">
                 {/* How to Read This Matrix */}
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h3 className="font-medium text-blue-900 mb-3">📖 How to Read This Matrix</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+                <div className="p-4 bg-blue-50 dark:bg-blue-950/10 dark:border-blue-500 rounded-lg border border-blue-200">
+                  <h3 className="font-medium text-blue-600 mb-3">📖 How to Read This Matrix</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-500">
                     <div>
                       <h4 className="font-medium mb-2">🔍 Chart Types:</h4>
                       <ul className="space-y-1">
@@ -549,7 +549,7 @@ export default function PerformancePage() {
                 </div>
 
                 {/* Quick Insights */}
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="p-4 bg-green-50 dark:bg-green-950/10 dark:border-green-500 rounded-lg border border-green-200">
                   <h3 className="font-medium text-green-900 mb-2">💡 What to Look For</h3>
                   <ul className="text-sm text-green-800 space-y-1">
                     <li>• <strong>Position correlations:</strong> Usually negative (lower position = better = more clicks/impressions)</li>

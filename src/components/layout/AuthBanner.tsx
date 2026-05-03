@@ -49,7 +49,7 @@ export default function AuthBanner() {
   }
 
   return (
-    <div className="sticky top-0 z-50 bg-yellow-50 border-b border-yellow-200 shadow-md">
+    <div className="sticky top-0 z-50 bg-yellow-50 dark:bg-yellow-500/10 dark:border-yellow-500 border-b border-yellow-200 shadow-md">
       <div className="max-w-full px-6 py-4">
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-3 flex-1">

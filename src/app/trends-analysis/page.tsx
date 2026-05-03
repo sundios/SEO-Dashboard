@@ -381,27 +381,27 @@ export default function TrendsAnalysisPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+      <div className="dark:bg-zinc-950 border border-gray-700 dark:border-zinc-700 rounded-xl shadow-sm p-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-zinc-300 flex items-center gap-3">
           <FontAwesomeIcon icon={faChartArea} className="text-blue-600" />
           Trends Analysis
         </h1>
-        <p className="text-gray-500 mt-1 text-sm">
+        <p className="text-gray-500 dark:text-zinc-500 mt-1 text-sm mb-4">
           Overlay GSC traffic with Google Trends search interest to distinguish seasonal demand from structural SEO issues.
         </p>
-      </div>
+      
 
       {/* Config panel */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-5">
-        <h2 className="font-semibold text-gray-800 text-base">Configuration</h2>
+      <div className="bg-white dark:bg-zinc-900 border border-gray-200 rounded-xl shadow-sm p-6 space-y-5">
+        <h2 className="font-semibold text-gray-800 dark:text-zinc-300 text-base">Configuration</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Site</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Site</label>
             <select
               value={config.siteUrl}
               onChange={e => updateConfig('siteUrl', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-950 dark:border-gray-700 dark:text-zinc-300"
             >
               <option value="">Select a site…</option>
               {sites.map(s => <option key={s} value={s}>{s}</option>)}
@@ -409,37 +409,37 @@ export default function TrendsAnalysisPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Start Date</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Start Date</label>
             <input type="date" value={config.startDate} max={maxDate}
               onChange={e => updateConfig('startDate', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">End Date</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">End Date</label>
             <input type="date" value={config.endDate} max={maxDate}
               onChange={e => updateConfig('endDate', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">URL Filter (contains)</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">URL Filter (contains)</label>
             <input type="text" placeholder="e.g. /blog/" value={config.urlFilter}
               onChange={e => updateConfig('urlFilter', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Query Filter (contains)</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Query Filter (contains)</label>
             <input type="text" placeholder="e.g. figma" value={config.queryFilter}
               onChange={e => updateConfig('queryFilter', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Device</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Device</label>
             <select value={config.device} onChange={e => updateConfig('device', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 bg-white">
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300">
               <option value="">All Devices</option>
               <option value="desktop">Desktop</option>
               <option value="mobile">Mobile</option>
@@ -448,30 +448,30 @@ export default function TrendsAnalysisPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Country (GSC 3-letter code)</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Country (GSC 3-letter code)</label>
             <input type="text" placeholder="e.g. usa" value={config.country}
               onChange={e => updateConfig('country', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Top N Queries</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Top N Queries</label>
             <input type="number" min={1} max={50} value={config.topNQueries}
               onChange={e => updateConfig('topNQueries', parseInt(e.target.value) || 15)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Trends Geo (2-letter ISO)</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Trends Geo (2-letter ISO)</label>
             <input type="text" placeholder="e.g. US" value={config.trendsGeoCode}
               onChange={e => updateConfig('trendsGeoCode', e.target.value.toUpperCase())}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" />
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Time Resolution</label>
+            <label className="text-xs font-medium text-gray-600 dark:text-zinc-500 uppercase tracking-wide">Time Resolution</label>
             <select value={config.timeResolution} onChange={e => updateConfig('timeResolution', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 bg-white">
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:bg-zinc-950 dark:border-zinc-700 dark:text-zinc-300">
               <option value="DAY">Day</option>
               <option value="WEEK">Week</option>
               <option value="MONTH">Month</option>
@@ -479,7 +479,7 @@ export default function TrendsAnalysisPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 pt-2 border-t border-gray-100">
+        <div className="flex items-center gap-4 pt-2 border-t border-gray-100 dark:border-zinc-700">
           <button onClick={runAnalysis} disabled={loading || !config.siteUrl}
             className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium text-sm transition-colors">
             {loading ? <FontAwesomeIcon icon={faSpinner} className="animate-spin" /> : <FontAwesomeIcon icon={faPlay} />}
@@ -646,6 +646,7 @@ export default function TrendsAnalysisPage() {
           </p>
         </div>
       )}
+    </div>
     </div>
   );
 }

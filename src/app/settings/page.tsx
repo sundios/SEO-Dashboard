@@ -237,7 +237,16 @@ export default function SettingsPage() {
           overviewSites: settings.overviewSites,
           aiProvider: settings.aiProvider,
           lmStudioHost: settings.lmStudioHost,
-          lmStudioModel: settings.lmStudioModel
+          lmStudioModel: settings.lmStudioModel,
+          systemPrompt: settings.systemPrompt,
+          contextLength: settings.contextLength,
+          gpuOffload: settings.gpuOffload,
+          temperature: settings.temperature,
+          topK: settings.topK,
+          topP: settings.topP,
+          minP: settings.minP,
+          repeatPenalty: settings.repeatPenalty,
+          presencePenalty: settings.presencePenalty
         })
       });
 
@@ -256,7 +265,16 @@ export default function SettingsPage() {
           overviewSites: Array.isArray(result.overviewSites) ? result.overviewSites : (Array.isArray(settings.overviewSites) ? settings.overviewSites : []),
           aiProvider: result.aiProvider === 'local_llm' ? 'local_llm' : 'openai',
           lmStudioHost: String(result.lmStudioHost !== undefined && result.lmStudioHost !== null ? result.lmStudioHost : settings.lmStudioHost || 'http://localhost:1234'),
-          lmStudioModel: String(result.lmStudioModel !== undefined && result.lmStudioModel !== null ? result.lmStudioModel : settings.lmStudioModel || '')
+          lmStudioModel: String(result.lmStudioModel !== undefined && result.lmStudioModel !== null ? result.lmStudioModel : settings.lmStudioModel || ''),
+          systemPrompt: String(result.systemPrompt !== undefined && result.systemPrompt !== null ? result.systemPrompt : settings.systemPrompt || ''),
+          contextLength: Number(result.contextLength !== undefined && result.contextLength !== null ? result.contextLength : settings.contextLength || 8192),
+          gpuOffload: String(result.gpuOffload !== undefined && result.gpuOffload !== null ? result.gpuOffload : settings.gpuOffload || 'max'),
+          temperature: Number(result.temperature !== undefined && result.temperature !== null ? result.temperature : settings.temperature ?? 0.8),
+          topK: Number(result.topK !== undefined && result.topK !== null ? result.topK : settings.topK || 40),
+          topP: Number(result.topP !== undefined && result.topP !== null ? result.topP : settings.topP ?? 0.95),
+          minP: Number(result.minP !== undefined && result.minP !== null ? result.minP : settings.minP ?? 0.05),
+          repeatPenalty: Number(result.repeatPenalty !== undefined && result.repeatPenalty !== null ? result.repeatPenalty : settings.repeatPenalty ?? 1.1),
+          presencePenalty: Number(result.presencePenalty !== undefined && result.presencePenalty !== null ? result.presencePenalty : settings.presencePenalty ?? 0.0)
         };
         console.log('Updated settings:', updatedSettings); // Debug log
         setSettings(updatedSettings);
@@ -365,27 +383,27 @@ export default function SettingsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600 mt-2">Configure your API keys and credentials</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">Configure your API keys and credentials</p>
       </div>
 
       {/* Message Display */}
       {message && (
         <div className={`p-4 rounded-lg flex items-center space-x-2 ${
           message.type === 'success' 
-            ? 'bg-green-50 text-green-800 border border-green-200' 
-            : 'bg-red-50 text-red-800 border border-red-200'
+            ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-600' 
+            : 'bg-rose-500/10 text-rose-600 border border-rose-600'
         }`}>
           <FontAwesomeIcon 
             icon={message.type === 'success' ? faCheckCircle : faExclamationTriangle} 
-            className={message.type === 'success' ? 'text-green-600' : 'text-red-600'}
+            className={message.type === 'success' ? 'text-emerald-600' : 'text-rose-600'}
           />
           <span>{message.text}</span>
         </div>
       )}
 
       {/* Settings Form */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
+      <div className="bg-white dark:bg-zinc-950 rounded-lg shadow-sm border border-gray-200 dark:border-black p-6 space-y-6">
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <FontAwesomeIcon icon={faSpinner} className="animate-spin text-blue-600 text-2xl" />
@@ -394,40 +412,40 @@ export default function SettingsPage() {
         ) : (
           <>
             {/* AI Provider Selection */}
-            <div className="space-y-4 border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <div className="space-y-4 border border-gray-200 dark:border-zinc-700 rounded-lg p-4 bg-gray-50 dark:bg-zinc-900">
               <div className="space-y-2">
-                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                  <FontAwesomeIcon icon={faServer} className="text-gray-500" />
+                <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <FontAwesomeIcon icon={faServer} className="text-gray-500 dark:text-gray-400" />
                   <span>AI Analysis Provider</span>
                 </label>
                 <select
                   value={settings.aiProvider}
                   onChange={(e) => setSettings({ ...settings, aiProvider: e.target.value as 'openai' | 'local_llm' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white"
                 >
                   <option value="openai">OpenAI (Cloud)</option>
                   <option value="local_llm">Local LLM (LM Studio)</option>
                 </select>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   Choose which AI provider to use for generating insights across the dashboard.
                 </p>
               </div>
 
               {/* Local LLM Settings */}
               {settings.aiProvider === 'local_llm' && (
-                <div className="space-y-4 pt-3 border-t border-gray-200">
+                <div className="space-y-4 pt-3 border-t border-gray-200 dark:border-zinc-700">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900 flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faNetworkWired} className="text-blue-500" />
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white flex items-center space-x-2">
+                      <FontAwesomeIcon icon={faNetworkWired} className="text-gray-500 dark:text-gray-400" />
                       <span>LM Studio Configuration</span>
                     </h3>
                     {lmStudioOnline ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                         <span className="w-2 h-2 mr-1.5 bg-green-500 rounded-full"></span>
                         Online
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                         <span className="w-2 h-2 mr-1.5 bg-red-500 rounded-full"></span>
                         Offline
                       </span>
@@ -436,20 +454,20 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-medium text-gray-700">Server URL</label>
+                      <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Server URL</label>
                       <input
                         type="text"
                         value={settings.lmStudioHost}
                         onChange={(e) => setSettings({ ...settings, lmStudioHost: e.target.value })}
                         placeholder="http://localhost:1234"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                       />
                     </div>
                     
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <label className="text-xs font-medium text-gray-700">Model Selection</label>
+                          <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Model Selection</label>
                           {modelLoadStatus === 'unloading' && (
                             <span className="flex items-center text-[10px] text-red-600 font-medium">
                               <span className="w-2 h-2 mr-1 bg-red-500 rounded-full animate-pulse"></span>
@@ -478,7 +496,7 @@ export default function SettingsPage() {
                           onClick={fetchLMStudioModels}
                           type="button"
                           disabled={loadingModels}
-                          className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center space-x-1"
                         >
                           <FontAwesomeIcon icon={faRefresh} className={loadingModels ? "animate-spin" : ""} />
                           <span>Refresh List</span>
@@ -494,22 +512,22 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   {!lmStudioOnline && (
-                    <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                    <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 p-2 rounded border border-amber-200 dark:border-amber-800/50">
                       Could not connect to LM Studio. Make sure it is running, the local server is started, and the Server URL is correct.
                     </p>
                   )}
 
                   {/* Expert Level Settings Accordion */}
-                  <details className="mt-6 group border border-gray-200 rounded-lg overflow-hidden bg-white">
-                    <summary className="px-4 py-3 bg-gray-50 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100 flex items-center justify-between select-none">
+                  <details className="mt-6 group border border-gray-200 dark:border-zinc-700 rounded-lg overflow-hidden bg-white dark:bg-zinc-800">
+                    <summary className="px-4 py-3 bg-gray-50 dark:bg-zinc-800/50 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700/50 flex items-center justify-between select-none">
                       <div className="flex items-center space-x-2">
-                        <FontAwesomeIcon icon={faServer} className="text-gray-400" />
+                        <FontAwesomeIcon icon={faServer} className="text-gray-400 dark:text-gray-500" />
                         <span>Expert Level Settings</span>
                       </div>
-                      <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 group-open:rotate-180 transition-transform duration-200" />
+                      <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 dark:text-gray-500 group-open:rotate-180 transition-transform duration-200" />
                     </summary>
-                    <div className="p-4 border-t border-gray-200 space-y-6">
-                      <div className="bg-amber-50 border border-amber-200 rounded p-3 text-xs text-amber-800 flex items-start">
+                    <div className="p-4 border-t border-gray-200 dark:border-zinc-700 space-y-6">
+                      <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 rounded p-3 text-xs text-amber-800 dark:text-amber-400 flex items-start">
                         <FontAwesomeIcon icon={faExclamationTriangle} className="text-amber-500 mt-0.5 mr-2" />
                         <p>
                           <strong>Warning:</strong> Modifying these settings can drastically alter the AI's behavior, performance, and output quality. 
@@ -520,24 +538,24 @@ export default function SettingsPage() {
                       <div className="space-y-4">
                         {/* System Prompt */}
                         <div className="space-y-1">
-                          <label className="flex items-center text-xs font-medium text-gray-700">
+                          <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                             Custom System Prompt Persona
-                            <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="This prompt is injected before the dashboard's built-in SEO instructions to act as a persona or strictly enforce formatting rules." />
+                            <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="This prompt is injected before the dashboard's built-in SEO instructions to act as a persona or strictly enforce formatting rules." />
                           </label>
                           <textarea
                             value={settings.systemPrompt}
                             onChange={(e) => setSettings({ ...settings, systemPrompt: e.target.value })}
                             placeholder="e.g. Act as a ruthless marketing executive..."
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-h-[80px]"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white min-h-[80px]"
                           />
                         </div>
 
                         {/* Grid for Hardware / Load params */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="flex items-center text-xs font-medium text-gray-700">
+                            <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                               Context Length
-                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Maximum number of tokens the model can process at once (input + output). Higher values use more RAM." />
+                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Maximum number of tokens the model can process at once (input + output). Higher values use more RAM." />
                             </label>
                             <input
                               type="number"
@@ -545,94 +563,94 @@ export default function SettingsPage() {
                               step="512"
                               value={settings.contextLength}
                               onChange={(e) => setSettings({ ...settings, contextLength: parseInt(e.target.value) || 8192 })}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="flex items-center text-xs font-medium text-gray-700">
+                            <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                               GPU Offload
-                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Number of layers to offload to GPU, or 'max' to offload all possible layers. Use 'max' for best performance." />
+                              <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Number of layers to offload to GPU, or 'max' to offload all possible layers. Use 'max' for best performance." />
                             </label>
                             <input
                               type="text"
                               value={settings.gpuOffload}
                               onChange={(e) => setSettings({ ...settings, gpuOffload: e.target.value })}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-zinc-600 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                             />
                           </div>
                         </div>
 
-                        <hr className="border-gray-200" />
+                        <hr className="border-gray-200 dark:border-zinc-700" />
 
                         {/* Sliders for Inference */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                           {/* Temperature */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Temperature
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Controls randomness. Lower values make output more focused and deterministic, higher values make it more creative." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Controls randomness. Lower values make output more focused and deterministic, higher values make it more creative." />
                               </label>
-                              <span className="text-xs text-gray-500 font-mono">{settings.temperature}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{settings.temperature}</span>
                             </div>
                             <input
                               type="range"
                               min="0" max="2" step="0.05"
                               value={settings.temperature}
                               onChange={(e) => setSettings({ ...settings, temperature: parseFloat(e.target.value) })}
-                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              className="w-full h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
 
                           {/* Top P */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Top P Sampling
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Nucleus sampling. Limits token choices to a percentage of total probability mass. 1.0 means no limit." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Nucleus sampling. Limits token choices to a percentage of total probability mass. 1.0 means no limit." />
                               </label>
-                              <span className="text-xs text-gray-500 font-mono">{settings.topP}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{settings.topP}</span>
                             </div>
                             <input
                               type="range"
                               min="0" max="1" step="0.01"
                               value={settings.topP}
                               onChange={(e) => setSettings({ ...settings, topP: parseFloat(e.target.value) })}
-                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              className="w-full h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
 
                           {/* Min P */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Min P Sampling
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Sets a minimum probability threshold relative to the most likely token. Helps prevent outputting nonsense tokens." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Sets a minimum probability threshold relative to the most likely token. Helps prevent outputting nonsense tokens." />
                               </label>
-                              <span className="text-xs text-gray-500 font-mono">{settings.minP}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{settings.minP}</span>
                             </div>
                             <input
                               type="range"
                               min="0" max="1" step="0.01"
                               value={settings.minP}
                               onChange={(e) => setSettings({ ...settings, minP: parseFloat(e.target.value) })}
-                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              className="w-full h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
 
                           {/* Top K */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Top K Sampling
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Limits token choices to the top K most likely tokens. A value of 0 or -1 typically disables it." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Limits token choices to the top K most likely tokens. A value of 0 or -1 typically disables it." />
                               </label>
                               <input
                                 type="number"
                                 min="-1"
                                 value={settings.topK}
                                 onChange={(e) => setSettings({ ...settings, topK: parseInt(e.target.value) })}
-                                className="w-20 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                                className="w-20 px-2 py-1 text-xs border border-gray-300 dark:border-zinc-600 rounded focus:ring-1 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
                               />
                             </div>
                           </div>
@@ -640,46 +658,46 @@ export default function SettingsPage() {
                           {/* Repeat Penalty */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Repeat Penalty
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Penalizes tokens that have already appeared. 1.0 means no penalty. Higher values reduce repetition." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Penalizes tokens that have already appeared. 1.0 means no penalty. Higher values reduce repetition." />
                               </label>
-                              <span className="text-xs text-gray-500 font-mono">{settings.repeatPenalty}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{settings.repeatPenalty}</span>
                             </div>
                             <input
                               type="range"
                               min="1" max="2" step="0.05"
                               value={settings.repeatPenalty}
                               onChange={(e) => setSettings({ ...settings, repeatPenalty: parseFloat(e.target.value) })}
-                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              className="w-full h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
 
                           {/* Presence Penalty */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <label className="flex items-center text-xs font-medium text-gray-700">
+                              <label className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                 Presence Penalty
-                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 cursor-help" title="Penalizes tokens based on whether they've appeared at all. Increases likelihood of bringing up new topics." />
+                                <FontAwesomeIcon icon={faQuestionCircle} className="ml-1.5 text-gray-400 dark:text-gray-500 cursor-help" title="Penalizes tokens based on whether they've appeared at all. Increases likelihood of bringing up new topics." />
                               </label>
-                              <span className="text-xs text-gray-500 font-mono">{settings.presencePenalty}</span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{settings.presencePenalty}</span>
                             </div>
                             <input
                               type="range"
                               min="-2" max="2" step="0.1"
                               value={settings.presencePenalty}
                               onChange={(e) => setSettings({ ...settings, presencePenalty: parseFloat(e.target.value) })}
-                              className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              className="w-full h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex justify-end pt-4 border-t border-gray-100 mt-6">
+                      <div className="flex justify-end pt-4 border-t border-gray-100 dark:border-zinc-700 mt-6">
                         <button
                           type="button"
                           onClick={resetExpertSettings}
-                          className="flex items-center text-xs font-medium text-gray-500 hover:text-gray-700 bg-white border border-gray-200 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
+                          className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-600 px-3 py-1.5 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
                         >
                           <FontAwesomeIcon icon={faUndo} className="mr-1.5" />
                           Reset to Defaults
@@ -909,9 +927,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-blue-900 mb-3">Setup Instructions</h2>
-        <ol className="list-decimal list-inside space-y-2 text-sm text-blue-800">
+      <div className="bg-blue-500/5 border border-blue-600 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-blue-600 mb-3">Setup Instructions</h2>
+        <ol className="list-decimal list-inside space-y-2 text-sm text-blue-600">
           <li>Choose your AI Provider: OpenAI or Local LLM (LM Studio).</li>
           <li>If using OpenAI, enter your API key. If using LM Studio, ensure the server is running and a model is loaded.</li>
           <li>Download your Google Search Console credentials (client_secret.json) from Google Cloud Console</li>

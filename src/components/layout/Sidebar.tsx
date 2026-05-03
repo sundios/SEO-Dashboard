@@ -54,17 +54,17 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className={`bg-white border-r border-gray-200 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
+    <aside className={`bg-white dark:bg-zinc-950 border-r border-gray-200 dark:border-zinc-800 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
       <div className="p-4">
         <div className="flex items-center justify-between mb-6">
           {!collapsed && (
-            <h2 className="text-lg font-semibold text-gray-900">GSC Dashboard</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">GSC Dashboard</h2>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
           >
-            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
@@ -79,8 +79,8 @@ const Sidebar = () => {
                 href={item.href}
                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                    : 'text-gray-700 hover:bg-gray-100 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white'
                 }`}
               >
                 <span className="w-5 h-5">{item.icon}</span>

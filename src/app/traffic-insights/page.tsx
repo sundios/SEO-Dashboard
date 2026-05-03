@@ -540,15 +540,15 @@ export default function TrafficInsightsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-3">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-zinc-300 flex items-center space-x-3">
             <FontAwesomeIcon icon={faTrophy} className="text-green-600" />
             <span>Traffic Insights</span>
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-600 dark:text-zinc-500">
             Analyze winners and losers in your Google Search Console traffic
           </p>
         </div>
@@ -567,7 +567,7 @@ export default function TrafficInsightsPage() {
         )}
 
         {/* Winners & Losers Controls */}
-        <div className="mb-6 bg-white rounded-lg shadow p-6">
+        <div className="mb-6 bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Winners & Losers Analysis</h3>
           
           {/* Date Range Preset Selector */}
@@ -581,7 +581,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === '30days'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 30 Days
@@ -591,7 +591,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === '3months'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 3 Months
@@ -601,7 +601,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === '6months'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 6 Months
@@ -611,7 +611,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === '9months'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 9 Months
@@ -621,7 +621,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === '12months'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 12 Months
@@ -633,7 +633,7 @@ export default function TrafficInsightsPage() {
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   dateRangePreset === 'custom'
                     ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
                 Custom
@@ -649,7 +649,7 @@ export default function TrafficInsightsPage() {
               <select
                 value={selectedSite}
                 onChange={(e) => setSelectedSite(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
@@ -670,7 +670,7 @@ export default function TrafficInsightsPage() {
                   setWinnersLosersStartDate(e.target.value);
                   setDateRangePreset('custom');
                 }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -689,7 +689,7 @@ export default function TrafficInsightsPage() {
                   setWinnersLosersEndDate(e.target.value);
                   setDateRangePreset('custom');
                 }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full dark:bg-zinc-950 dark:text-zinc-300 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div className="flex items-end">
@@ -712,7 +712,7 @@ export default function TrafficInsightsPage() {
 
         {/* Debug Info */}
         {winnersLosersData && (
-          <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-xs">
+          <div className="mb-4 bg-yellow-50 dark:bg-blue-500/10 dark:border-blue-500 border border-yellow-200 rounded-lg p-4 text-xs">
             <strong>Debug:</strong> Data loaded - Queries Winners: {winnersLosersData.queries.winners.length}, 
             Queries Losers: {winnersLosersData.queries.losers.length}, 
             Pages Winners: {winnersLosersData.pages.winners.length}, 
@@ -724,36 +724,36 @@ export default function TrafficInsightsPage() {
         {winnersLosersData && (
           <div className="space-y-6">
             {/* Keywords Section */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:shadow-lg rounded-lg shadow p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Keywords Analysis</h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Winners - Keywords */}
                 <div>
-                  <h3 className="text-lg font-semibold text-green-700 mb-4 flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-emerald-600 mb-4 flex items-center space-x-2">
                     <FontAwesomeIcon icon={faTrophy} />
                     <span>Winners (Growth in Clicks)</span>
                   </h3>
                   {winnersLosersData.queries.winners.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
+                        <thead className="bg-gray-50 dark:bg-zinc-900 dark:text-zinc-300">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Keyword</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">% Change</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-zinc-900 dark:text-zinc-300 divide-y divide-gray-200 dark:divide-zinc-800">
                           {winnersLosersData.queries.winners.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{item.name}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.firstHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.secondHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-green-600">+{item.change.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-green-600">+{item.changePercent.toFixed(1)}%</td>
+                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors duration-200">
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-zinc-300">{item.name}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.firstHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.secondHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-emerald-500">+{item.change.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-emerald-500">+{item.changePercent.toFixed(1)}%</td>
                             </tr>
                           ))}
                         </tbody>
@@ -766,37 +766,37 @@ export default function TrafficInsightsPage() {
 
                 {/* Losers - Keywords */}
                 <div>
-                  <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-rose-600 mb-4 flex items-center space-x-2">
                     <FontAwesomeIcon icon={faArrowDown} />
                     <span>Losers (Decrease in Clicks)</span>
                   </h3>
                   {winnersLosersData.queries.losers.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
+                        <thead className="bg-gray-50 dark:bg-zinc-900 dark:text-zinc-400">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Keyword</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">% Change</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-zinc-900 dark:text-zinc-300 divide-y divide-gray-200 dark:divide-zinc-800">
                           {winnersLosersData.queries.losers.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{item.name}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.firstHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.secondHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-red-600">{item.change.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-red-600">{item.changePercent.toFixed(1)}%</td>
+                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors duration-200">
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-zinc-300">{item.name}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.firstHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.secondHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-rose-500">{item.change.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-rose-500">{item.changePercent.toFixed(1)}%</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm">No losers found</p>
+                    <p className="text-gray-500 dark:text-zinc-300 text-sm">No losers found</p>
                   )}
                 </div>
               </div>
@@ -805,7 +805,7 @@ export default function TrafficInsightsPage() {
               {winnersLosersData && (winnersLosersData.queries.winners.length > 0 || winnersLosersData.queries.losers.length > 0) && (
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Keyword Contribution to Click Change</h3>
-                  <div className="bg-white rounded-lg p-4" style={{ height: '600px' }}>
+                  <div className="bg-white dark:bg-zinc-900 rounded-lg p-4" style={{ height: '800px' }}>
                     <canvas ref={contributionChartRef}></canvas>
                   </div>
                 </div>
@@ -813,79 +813,79 @@ export default function TrafficInsightsPage() {
             </div>
 
             {/* URLs Section */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">URLs Analysis</h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Winners - URLs */}
                 <div>
-                  <h3 className="text-lg font-semibold text-green-700 mb-4 flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-emerald-600 mb-4 flex items-center space-x-2">
                     <FontAwesomeIcon icon={faTrophy} />
                     <span>Winners (Growth in Clicks)</span>
                   </h3>
                   {winnersLosersData.pages.winners.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
+                        <thead className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors duration-200">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">URL</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">% Change</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-zinc-900 dark:text-zinc-300 divide-y divide-gray-200 dark:divide-zinc-800">
                           {winnersLosersData.pages.winners.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 text-sm font-medium text-gray-900 break-all max-w-xs">{item.name}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.firstHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.secondHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-green-600">+{item.change.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-green-600">+{item.changePercent.toFixed(1)}%</td>
+                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors duration-200">
+                              <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-zinc-300 break-all max-w-xs">{item.name}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.firstHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.secondHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-emerald-500">+{item.change.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-emerald-500">+{item.changePercent.toFixed(1)}%</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm">No winners found</p>
+                    <p className="text-gray-500 text-sm dark:text-zinc-300">No winners found</p>
                   )}
                 </div>
 
                 {/* Losers - URLs */}
                 <div>
-                  <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-rose-600 mb-4 flex items-center space-x-2">
                     <FontAwesomeIcon icon={faArrowDown} />
                     <span>Losers (Decrease in Clicks)</span>
                   </h3>
                   {winnersLosersData.pages.losers.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
+                        <thead className="bg-gray-50 dark:bg-zinc-900 dark:text-zinc-300">
                           <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">URL</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersStartDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Clicks ({winnersLosersEndDate})</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Change</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">% Change</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-zinc-800 dark:text-zinc-300">
                           {winnersLosersData.pages.losers.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 text-sm font-medium text-gray-900 break-all max-w-xs">{item.name}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.firstHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{item.secondHalfClicks.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-red-600">{item.change.toLocaleString()}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-red-600">{item.changePercent.toFixed(1)}%</td>
+                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors duration-200">
+                              <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-zinc-300 break-all max-w-xs">{item.name}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.firstHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-zinc-300">{item.secondHalfClicks.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-rose-500">{item.change.toLocaleString()}</td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-rose-500">{item.changePercent.toFixed(1)}%</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm">No losers found</p>
+                    <p className="text-gray-500 text-sm dark:text-zinc-300">No losers found</p>
                   )}
                 </div>
               </div>

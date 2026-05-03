@@ -84,7 +84,7 @@ body {
 }
 
 .dark {
-  --background: oklch(0.13 0.028 261.692);
+  --background: oklch(0.1028 0 0);
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
   --card-foreground: oklch(0.985 0.002 247.839);
@@ -124,4 +124,38 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  /* --------------------------------------------- */
+  /*          Custom Scrollbar for SEO Dashboard   */
+  /* --------------------------------------------- */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+
+  /* Custom scrollbar for React Virtualized Grid */
+.customScrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.customScrollbar::-webkit-scrollbar-track {
+  background: #09090b;
+  border-radius: 10px;
+  height: 80%;
+}
+.customScrollbar::-webkit-scrollbar-thumb {
+  background:  var(--sidebar-primary);
+  border-radius: 6px;
+}
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background:  var(--sidebar-primary);
+  border-radius: 6px;
+}
 }

@@ -374,16 +374,16 @@ export default function OverviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 dark:text-zinc-300 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-zinc-300  mb-2">
                 📈 Sites Overview
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-zinc-500">
                 Multi-site performance tracking and trend analysis
               </p>
             </div>
@@ -398,49 +398,49 @@ export default function OverviewPage() {
         </div>
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-white dark:bg-zinc-900 dark:text-zinc-300 rounded-lg shadow p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Overview Controls</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="time-period" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="time-period" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Time Period
               </label>
-              <select id="time-period" className="w-full" onChange={(e) => setOverviewPeriod(e.target.value)} value={overviewPeriod}>
+              <select id="time-period" className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-sm p-2" onChange={(e) => setOverviewPeriod(e.target.value)} value={overviewPeriod}>
                 {dateRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label htmlFor="device-type" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="device-type" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Device Type
               </label>
-              <select id="device-type" className="w-full" onChange={(e) => setOverviewDevice(e.target.value)} value={overviewDevice}>
+              <select id="device-type" className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-sm p-2" onChange={(e) => setOverviewDevice(e.target.value)} value={overviewDevice}>
                 {deviceOptions.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label htmlFor="secondary-metric" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="secondary-metric" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                 Secondary Metric
               </label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setOverviewSecondaryMetric('none')}
-                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'none' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'none' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-zinc-700 dark:text-zinc-300'}`}
                 >
                   None
                 </button>
                 <button
                   onClick={() => setOverviewSecondaryMetric('ctr')}
-                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'ctr' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'ctr' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-zinc-700 dark:text-zinc-300'}`}
                 >
                   CTR
                 </button>
                 <button
                   onClick={() => setOverviewSecondaryMetric('position')}
-                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'position' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  className={`px-3 py-2 text-sm rounded ${overviewSecondaryMetric === 'position' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-zinc-700 dark:text-zinc-300'}`}
                 >
                   Position
                 </button>
@@ -451,9 +451,9 @@ export default function OverviewPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded p-4 mb-6">
-            <h3 className="text-red-800 font-medium">Error</h3>
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="bg-rose-300 dark:bg-rose-900 border border-rose-200 dark:border-rose-800 rounded p-4 mb-6">
+            <h3 className="text-rose-800 dark:text-rose-200 font-medium">Error</h3>
+            <p className="text-rose-700 dark:text-rose-300 text-sm">{error}</p>
           </div>
         )}
 
@@ -467,7 +467,8 @@ export default function OverviewPage() {
 
         {/* No Sites Selected Message */}
         {topSites.length === 0 && !overviewLoading && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center mb-6">
+          <div className="bg-yellow-50 dark:bg-zinc-900 dark:border-gray-700 border-yellow-200 rounded-lg p-8 text-center mb-6">
+            <div className="dark:bg-yellow-500/10 w-full h-full flex flex-col items-center justify-center p-3">
             <div className="text-4xl mb-4">📋</div>
             <h3 className="text-xl font-semibold text-yellow-900 mb-2">
               No Sites Selected
@@ -482,12 +483,13 @@ export default function OverviewPage() {
               <span>Go to Settings</span>
               <span>→</span>
             </Link>
+            </div>
           </div>
         )}
 
         {/* Site Selection Info */}
         {topSites.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
+          <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6 dark:bg-zinc-900">
             <h3 className="text-blue-800 font-medium mb-3">
               📊 Showing Top {topSites.length} Sites
               {overviewData.length > 0 && (
@@ -496,7 +498,7 @@ export default function OverviewPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-blue-700">
               {topSites.map((site, index) => (
-                <div key={site} className="bg-white rounded p-2 border border-blue-200">
+                <div key={site} className="bg-white dark:bg-blue-950/20 rounded p-2 border dark:border-blue-800 border-blue-200">
                   <span className="font-medium">{index + 1}.</span> {getSiteName(site)}
                 </div>
               ))}

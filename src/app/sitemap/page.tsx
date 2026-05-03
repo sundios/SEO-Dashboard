@@ -249,16 +249,16 @@ export default function SitemapPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-zinc-300 mb-2">
                 🗺️ Sitemap Management
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-zinc-500">
                 View, submit, and manage sitemaps for your Google Search Console properties
               </p>
             </div>
@@ -283,15 +283,15 @@ export default function SitemapPage() {
         </div>
 
         {/* Site Selector */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="bg-white dark:bg-zinc-900 border border-gray-700 dark:border-zinc-700 rounded-lg shadow p-6 mb-6">
+          <label htmlFor="site-select" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
             Site ({sites.length} available)
           </label>
           <select
             id="site-select"
             value={selectedSite}
             onChange={(e) => setSelectedSite(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select a site...</option>
             {sites.map((site) => (
@@ -304,11 +304,11 @@ export default function SitemapPage() {
 
         {/* Submit Form */}
         {showSubmitForm && (
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Submit New Sitemap</h2>
+          <div className="bg-white dark:bg-zinc-900 border border-gray-700 dark:border-zinc-700 rounded-lg shadow p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-zinc-300 mb-4">Submit New Sitemap</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="sitemap-path" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="sitemap-path" className="block text-sm font-medium text-gray-700 dark:text-zinc-500 mb-2">
                   Sitemap Path
                 </label>
                 <input
@@ -317,7 +317,7 @@ export default function SitemapPage() {
                   value={newSitemapPath}
                   onChange={(e) => setNewSitemapPath(e.target.value)}
                   placeholder="sitemap.xml or https://example.com/sitemap.xml"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full dark:bg-zinc-950 dark:text-zinc-300 rounded-md p-2 border border-gray-500 dark:border-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter' && !submitting) {
                       handleSubmit();
@@ -332,7 +332,7 @@ export default function SitemapPage() {
                 <Button
                   onClick={handleSubmit}
                   disabled={submitting || !newSitemapPath.trim() || !selectedSite}
-                  className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-400"
+                  className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-emerald-500 dark:text-zinc-900 dark:hover:bg-emerald-600 disabled:bg-gray-400"
                 >
                   {submitting ? (
                     <>
@@ -392,8 +392,8 @@ export default function SitemapPage() {
 
         {/* Sitemaps List */}
         {!loading && selectedSite && (
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200">
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow">
+            <div className="p-6 border-b border-gray-200 dark:border-zinc-700">
               <h2 className="text-xl font-semibold text-gray-900">
                 Sitemaps ({sitemaps.length})
               </h2>
@@ -408,51 +408,51 @@ export default function SitemapPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-gray-50 dark:bg-zinc-900 dark:border-zinc-700 border-b border-gray-200">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-1/3">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-1/3">
                         Sitemap Path
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-16">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-16">
                         Type
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-24">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-24">
                         Status
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-32">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-32">
                         Submitted
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-32">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-32">
                         Downloaded
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-28">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-28">
                         Contents
                       </th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-20">
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-20">
                         Issues
                       </th>
-                      <th className="px-3 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider w-24">
+                      <th className="px-3 py-3 text-right text-xs font-semibold text-gray-700 dark:text-zinc-500 uppercase tracking-wider w-24">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white dark:bg-zinc-900 divide-y divide-gray-200">
                     {sitemaps.map((sitemap, index) => (
-                      <tr key={index} className="hover:bg-gray-50 transition-colors">
+                      <tr key={index} className="hover:bg-gray-50 dark:hover:bg-zinc-950 transition-colors">
                         <td className="px-4 py-3">
                           <div className="flex items-start gap-2 min-w-0">
-                            <span className="text-sm font-medium text-gray-900 break-words truncate">
+                            <span className="text-sm font-medium text-gray-900 dark:text-zinc-300 break-words truncate">
                               {sitemap.path}
                             </span>
                             {sitemap.isSitemapsIndex && (
-                              <span className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded flex-shrink-0">
+                              <span className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded dark:bg-blue-500/10 dark:text-blue-500 dark:border dark:border-blue-800 flex-shrink-0">
                                 Index
                               </span>
                             )}
                           </div>
                         </td>
                         <td className="px-3 py-3">
-                          <span className="text-sm text-gray-900">{sitemap.type || 'N/A'}</span>
+                          <span className="text-sm text-gray-900 dark:text-zinc-300">{sitemap.type || 'N/A'}</span>
                         </td>
                         <td className="px-3 py-3">
                           <div className="flex flex-col gap-1">
@@ -467,10 +467,10 @@ export default function SitemapPage() {
                           </div>
                         </td>
                         <td className="px-3 py-3">
-                          <span className="text-xs text-gray-900">{formatDate(sitemap.lastSubmitted)}</span>
+                          <span className="text-xs text-gray-900 dark:text-zinc-300">{formatDate(sitemap.lastSubmitted)}</span>
                         </td>
                         <td className="px-3 py-3">
-                          <span className="text-xs text-gray-900">{formatDate(sitemap.lastDownloaded)}</span>
+                          <span className="text-xs text-gray-900 dark:text-zinc-300">{formatDate(sitemap.lastDownloaded)}</span>
                         </td>
                         <td className="px-3 py-3">
                           {sitemap.contents && sitemap.contents.length > 0 ? (
@@ -478,7 +478,7 @@ export default function SitemapPage() {
                               {sitemap.contents.map((content, contentIndex) => (
                                 <span
                                   key={contentIndex}
-                                  className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 w-fit"
+                                  className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-zinc-700 dark:text-zinc-300 text-gray-800 w-fit"
                                 >
                                   {content.type}: {parseInt(String(content.submitted)).toLocaleString()}
                                 </span>
@@ -504,7 +504,7 @@ export default function SitemapPage() {
                             )}
                             {(!sitemap.errors || parseInt(String(sitemap.errors)) === 0) && 
                              (!sitemap.warnings || parseInt(String(sitemap.warnings)) === 0) && (
-                              <span className="text-gray-400">None</span>
+                              <span className="text-gray-400">None</span> 
                             )}
                           </div>
                         </td>

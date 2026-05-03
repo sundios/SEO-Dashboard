@@ -157,6 +157,11 @@ source venv/bin/activate
 python3 backend_api.py
 ```
 
+### use these commands in powershell to start the backend
+```bash
+.\venv\Scripts\activate.ps1
+python3 backend_api.py
+```
 The backend runs on `http://localhost:5001`.
 
 ### 5. Start the frontend

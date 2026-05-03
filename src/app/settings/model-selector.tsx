@@ -18,7 +18,7 @@ interface ModelSelectorProps {
   className?: string;
 }
 
-export const ModelSelector: React.FC<ModelSelectorProps> = ({
+export const                                                                                         ModelSelector: React.FC<ModelSelectorProps> = ({
   options,
   value,
   onChange,
