@@ -19,7 +19,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-table": "^8.21.3",
     "@tremor/react": "^3.18.7",
-    "axios": "^1.9.0",
+    "axios": "^1.15.2",
     "chart.js": "^4.4.9",
     "chartjs-plugin-annotation": "^3.1.0",
     "class-variance-authority": "^0.7.1",
