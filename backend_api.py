@@ -679,8 +679,10 @@ def get_gpt_insights(content, analysis_type="general"):
                 "- Identify the best and worst performing days\n"
                 "- Note any weekly patterns or seasonal trends\n"
                 "- Highlight significant changes or anomalies\n"
+                "- Highlight any correlation between clicks, impressions, and CTR\n"
+                "- Highlight any other standout insights, unique patterns, or unexpected findings, but only if they exist\n"
                 "- Suggest potential reasons for performance changes\n\n"
-                "Keep insights concise and actionable. Use percentages and specific numbers when relevant."
+                "Keep insights concise and actionable. Use percentages and specific numbers when relevant. Do not manufacture findings that aren't supported by the data."
             )
         else:  # queries analysis
             system_content = (
@@ -692,12 +694,26 @@ def get_gpt_insights(content, analysis_type="general"):
                 "- **CTR Analysis**: Highlight queries with exceptional or poor CTR\n"
                 "- **Position Opportunities**: Find queries with good impressions but poor positions\n"
                 "- **Content Gaps**: Identify potential content optimization opportunities\n\n"
+                "**Branded Analysis:**\n"
+                "- Compare branded vs. non-branded query performance\n"
+                "- **Top Performers**: Identify highest-traffic branded queries and compare their characteristics\n"
+                "- **CTR Analysis**: Highlight branded queries with exceptional or poor CTR\n"
+                "- **Position Opportunities**: Find branded queries with good impressions but poor positions\n"
+                "**Industry Analysis:**\n"
+                "- Analyze non-branded query performance to identify relevant industries, topics, and target audiences\n"
+                "- **Top Performers**: Identify highest-traffic non-branded queries and compare their characteristics\n"
+                "- **CTR Analysis**: Highlight non-branded queries with exceptional or poor CTR\n"
+                "- **Position Opportunities**: Find non-branded queries with good impressions but poor positions\n"
+                "- **Content Gaps**: Identify potential content optimization opportunities\n\n"
+                "**Additional Insights:**\n"
+                "- Highlight any other standout insights, unique patterns, or unexpected findings, but only if they exist\n"
+                "- Suggest potential reasons for performance changes\n\n"
                 "**Key Recommendations:**\n"
                 "- Suggest which queries to optimize for better rankings\n"
                 "- Recommend content improvements based on query intent\n"
                 "- Identify low-hanging fruit for quick wins\n"
                 "- Highlight successful query patterns to replicate\n\n"
-                "Keep insights concise and actionable. Focus on specific opportunities and improvements."
+                "Keep insights concise and actionable. Focus on specific opportunities and improvements. Do not manufacture findings that aren't supported by the data."
             )
 
         if custom_prompt:
