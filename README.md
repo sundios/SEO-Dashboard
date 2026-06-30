@@ -3,13 +3,15 @@
 A full-featured Google Search Console analytics dashboard built with Next.js and a Flask backend. Provides traffic analysis, keyword insights, URL inspection, sitemap management, and AI-powered analysis.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.3-black)
-![Flask](https://img.shields.io/badge/Flask-2.3-green)
-![Chart.js](https://img.shields.io/badge/Chart.js-4.4-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 
-## Features
+![Flask](https://img.shields.io/badge/Flask-2.3-green)
+
+![Chart.js](https://img.shields.io/badge/Chart.js-4.4-blue)
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)## Features
 
 ### Traffic Performance
+
 - Daily clicks, impressions, CTR, and average position charts
 - Query, page, and country breakdowns with sortable/filterable tables
 - Device filtering (desktop, mobile, tablet)
@@ -19,15 +21,18 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 - AI-powered daily and query insights via OpenAI
 
 ### Sites Overview
+
 - Multi-site comparison dashboard
 - Up to 6 sites displayed simultaneously
 - Configurable time period and device filters
 
 ### Correlation Matrix
+
 - Scatter plot correlation matrix for clicks, impressions, CTR, and position
 - Visual analysis of metric relationships across queries
 
 ### Traffic Insights (Winners & Losers)
+
 - Compare keyword and URL performance between two dates
 - Top 20 winners (growth in clicks) and top 20 losers (decline in clicks)
 - Horizontal bar chart showing keyword contribution to click change
@@ -35,16 +40,19 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 - Accounts for 3-day GSC API data lag
 
 ### URL Inspection
+
 - Inspect any URL's index status in Google Search Console
 - View coverage state, crawl details, mobile usability, and rich results
 
 ### Sitemap Management
+
 - List all sitemaps for a site
 - Submit new sitemaps
 - Delete existing sitemaps
 - View sitemap details and URL counts
 
 ### Trends Analysis
+
 - Overlay GSC click traffic with Google Trends search interest on a dual-axis chart
 - Identify whether traffic changes are demand-driven (seasonal) or structural (site problem)
 - Configurable per-analysis: site, date range, URL filter, query filter, device, country, top-N queries, Trends geo, and time resolution (day / week / month)
@@ -56,6 +64,7 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 - Powered by the Google Trends API (`searchtrends` OAuth scope) with a separate credentials file
 
 ### Settings
+
 - Configure Google Search Console credentials path
 - Configure Google Trends credentials path (separate OAuth client for the Trends API)
 - Authorize GSC API access
@@ -65,48 +74,43 @@ A full-featured Google Search Console analytics dashboard built with Next.js and
 ## Dashboard Sections
 
 ### Sites Overview
+
 See a multi-site summary at a glance with key metrics and trend charts for each selected property.
 
-![Sites Overview](./public/readme-images/sites-overview.png)
+![Sites Overview](./public/readme-images/sites-overview.png)### Traffic Performance
 
-### Traffic Performance
 Analyze daily clicks, impressions, CTR, and average position with filters, tables, and algorithm update annotations.
 
-![Traffic Performance](./public/readme-images/traffic-performance.png)
+![Traffic Performance](./public/readme-images/traffic-performance.png)### Correlation Matrix
 
-### Correlation Matrix
 Visualize how GSC metrics relate to each other through pairwise charts and quick correlation insights.
 
-![Correlation Matrix](./public/readme-images/correlation-f  matrix.png)
+!\[Correlation Matrix\](./public/readme-images/correlation-f matrix.png)
 
 ### Traffic Insights
+
 Identify top keyword winners and losers between two dates, including contribution-to-change visualization.
 
-![Traffic Insights](./public/readme-images/traffic-insights.png)
+![Traffic Insights](./public/readme-images/traffic-insights.png)### URL Inspection
 
-### URL Inspection
 Inspect a specific URL to view indexing status, crawl details, mobile usability, and rich result data.
 
-![URL Inspection](./public/readme-images/url-inspection.png)
+![URL Inspection](./public/readme-images/url-inspection.png)### Sitemap
 
-### Sitemap
 Manage sitemaps by listing, submitting, refreshing, reviewing details, and deleting entries for a selected site.
 
-![Sitemap](./public/readme-images/sitemap.png)
+![Sitemap](./public/readme-images/sitemap.png)### Trends Analysis
 
-### Trends Analysis
 Overlay GSC click traffic with Google Trends search interest to separate seasonal demand from structural SEO problems. Algorithm update markers highlight known Google updates within the selected date range. Click **AI Insights** for a GPT-4o diagnosis that reads the chart pattern and recommends next steps.
 
-![Trends Analysis](./public/readme-images/trends-analysis.png)
+![Trends Analysis](./public/readme-images/trends-analysis.png)### Settings
 
-### Settings
 Configure API credentials, authorize Search Console access, and control overview site selections.
 
-![Settings](./public/readme-images/settings.png)
-
-## Tech Stack
+![Settings](./public/readme-images/settings.png)## Tech Stack
 
 ### Frontend
+
 - **Next.js 15** with App Router and TypeScript
 - **Tailwind CSS** for styling
 - **Chart.js** with annotation plugin for charting
@@ -116,6 +120,7 @@ Configure API credentials, authorize Search Console access, and control overview
 - **FontAwesome** for icons
 
 ### Backend
+
 - **Flask** with CORS support
 - **Google API Python Client** for GSC API access
 - **OpenAI** for AI-powered insights
@@ -124,18 +129,19 @@ Configure API credentials, authorize Search Console access, and control overview
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - Python 3.10+
 - Google Search Console API credentials (`client_secret.json`)
 
-### 1. Install frontend dependencies
+### 1\. Install frontend dependencies
 
 ```bash
 cd gsc-dashboard
 npm install
 ```
 
-### 2. Set up the Python virtual environment
+### 2\. Set up the Python virtual environment
 
 ```bash
 python3 -m venv venv
@@ -143,14 +149,14 @@ source venv/bin/activate
 pip install -r backend_requirements.txt
 ```
 
-### 3. Configure credentials
+### 3\. Configure credentials
 
 1. Go to the **Settings** page in the dashboard
 2. Set the path to your Google Search Console `client_secret.json` file
 3. Click **Authorize Credentials**
 4. (Optional) Set your OpenAI API key for AI insights
 
-### 4. Start the backend
+### 4\. Start the backend
 
 ```bash
 source venv/bin/activate
@@ -158,13 +164,15 @@ python3 backend_api.py
 ```
 
 ### use these commands in powershell to start the backend
+
 ```bash
 .\venv\Scripts\activate.ps1
 python3 backend_api.py
 ```
+
 The backend runs on `http://localhost:5001`.
 
-### 5. Start the frontend
+### 5\. Start the frontend
 
 ```bash
 npm run dev
@@ -205,7 +213,7 @@ gsc-dashboard/
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
+| --- | --- | --- |
 | GET | `/api/status` | Backend status and GSC connection info |
 | GET | `/api/sites` | List verified GSC sites |
 | GET | `/api/data` | Fetch GSC analytics data |
@@ -259,13 +267,15 @@ Algorithm update dates are stored in `algo_updates.json` — the single source o
 ```
 
 Supported `type` values and their annotation colors:
+
 | Type | Color |
-|------|-------|
+| --- | --- |
 | `core` | Orange |
 | `spam` | Purple |
 | `discover` | Green |
 
 Current updates tracked:
+
 - March 2026 core update
 - March 2026 spam update
 - February 2026 Discover update
