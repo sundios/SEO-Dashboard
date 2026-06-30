@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSpinner, faCheckCircle, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -185,7 +186,7 @@ export default function UrlInspectionPage() {
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
                   <option key={site} value={site}>
-                    {site.replace('https://', '').replace('http://', '')}
+                    {formatSiteName(site)}
                   </option>
                 ))}
               </select>

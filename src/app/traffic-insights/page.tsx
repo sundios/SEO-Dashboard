@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faTrophy, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import Chart from 'chart.js/auto';
@@ -654,7 +655,7 @@ export default function TrafficInsightsPage() {
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
                   <option key={site} value={site}>
-                    {site.replace('https://', '').replace('http://', '')}
+                    {formatSiteName(site)}
                   </option>
                 ))}
               </select>

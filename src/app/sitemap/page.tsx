@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSitemap, faSpinner, faPlus, faTrash, faRefresh, faExclamationTriangle, faCheckCircle, faInfoCircle, faEye, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -296,7 +297,7 @@ export default function SitemapPage() {
             <option value="">Select a site...</option>
             {sites.map((site) => (
               <option key={site} value={site}>
-                {site.replace('https://', '').replace('http://', '')}
+                {formatSiteName(site)}
               </option>
             ))}
           </select>

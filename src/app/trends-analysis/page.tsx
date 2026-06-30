@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -404,7 +405,7 @@ export default function TrendsAnalysisPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-zinc-950 dark:border-gray-700 dark:text-zinc-300"
             >
               <option value="">Select a site…</option>
-              {sites.map(s => <option key={s} value={s}>{s}</option>)}
+              {sites.map(s => <option key={s} value={s}>{formatSiteName(s)}</option>)}
             </select>
           </div>
 

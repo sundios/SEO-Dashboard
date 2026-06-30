@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Chart from 'chart.js/auto';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 
 interface GSCRow {
   keys?: string[];
@@ -364,8 +365,7 @@ export default function OverviewPage() {
   };
 
   const getSiteName = (url: string): string => {
-    // Return the full URL without https:// prefix, but keep the path
-    return url.replace('https://', '').replace('http://', '');
+    return formatSiteName(url);
   };
 
   // Manual refresh function

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Card from '../ui/card';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { formatSiteName } from '@/lib/utils';
 
 interface DashboardControlsProps {
   sites: string[];
@@ -92,7 +93,7 @@ const DashboardControls: React.FC<DashboardControlsProps> = ({
               <option value="">Select a website</option>
               {sites.map((site) => (
                 <option key={site} value={site}>
-                  {site}
+                  {formatSiteName(site)}
                 </option>
               ))}
             </select>

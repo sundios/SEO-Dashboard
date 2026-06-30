@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 
 interface GSCRow {
   keys?: string[];
@@ -352,7 +353,7 @@ export default function PerformancePage() {
                 <option value="">Select a site...</option>
                 {sites.map((site) => (
                   <option key={site} value={site}>
-                    {site.replace('https://', '').replace('http://', '')}
+                    {formatSiteName(site)}
                   </option>
                 ))}
               </select>

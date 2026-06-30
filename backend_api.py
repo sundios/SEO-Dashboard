@@ -304,8 +304,7 @@ def get_verified_sites(webmasters_service):
         site_list = webmasters_service.sites().list().execute()
         
         verified_sites_urls = [s['siteUrl'] for s in site_list['siteEntry']
-                              if s['permissionLevel'] != 'siteUnverifiedUser'
-                              and s['siteUrl'][:4] == 'http']
+                              if s['permissionLevel'] != 'siteUnverifiedUser']
         
         return verified_sites_urls
     except Exception as e:

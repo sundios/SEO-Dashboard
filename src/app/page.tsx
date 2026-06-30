@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MetricCard from '@/components/ui/MetricCard';
 import DashboardControls from '@/components/dashboard/DashboardControls';
 import { useData } from '@/contexts/DataContext';
+import { formatSiteName } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faBrain, faRefresh, faExclamationTriangle, faMouse, faEye, faChartLine, faMapPin, faMagnifyingGlass, faGlobe, faTrophy } from '@fortawesome/free-solid-svg-icons';
@@ -44,6 +45,14 @@ interface PageData {
   position: number;
 }
 
+interface CountryData {
+  keys: string[];
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+}
+
 interface GSCData {
   rows: QueryData[];
   totalClicks: number;
@@ -53,6 +62,7 @@ interface GSCData {
   dailyData: DailyData[];
   topQueries: QueryData[];
   topPages: PageData[];
+  topCountries?: CountryData[];
 }
 
 interface CachedGSCData extends GSCData {
@@ -1443,7 +1453,7 @@ export default function Dashboard() {
       'Avg Position': item.position.toFixed(1)
     }));
 
-    const siteName = selectedSite.replace('https://', '').replace('http://', '').replace(/[^a-zA-Z0-9]/g, '_');
+    const siteName = selectedSite.replace('sc-domain:', '').replace('https://', '').replace('http://', '').replace(/[^a-zA-Z0-9]/g, '_');
     const filename = `GSC_Daily_Data_${siteName}_${startDate}_to_${endDate}.csv`;
     downloadCSV(csvData, filename);
   };
@@ -1464,7 +1474,7 @@ export default function Dashboard() {
       'Avg Position': query.position ? query.position.toFixed(1) : 'N/A'
     }));
 
-    const siteName = selectedSite.replace('https://', '').replace('http://', '').replace(/[^a-zA-Z0-9]/g, '_');
+    const siteName = selectedSite.replace('sc-domain:', '').replace('https://', '').replace('http://', '').replace(/[^a-zA-Z0-9]/g, '_');
     const filterInfo = filters.queryText ? `_filtered_${filters.queryText.replace(/[^a-zA-Z0-9]/g, '_')}` : '';
     const filename = `GSC_Query_Data_${siteName}_${startDate}_to_${endDate}${filterInfo}.csv`;
     downloadCSV(csvData, filename);
@@ -1558,7 +1568,7 @@ export default function Dashboard() {
           {performanceData && (
             <div className="mt-2 flex items-center space-x-2 text-sm text-blue-600 dark:text-blue-400">
               <FontAwesomeIcon icon={faDownload} />
-              <span>Data cached - showing results for {performanceData.site} from {performanceData.startDate} to {performanceData.endDate}</span>
+              <span>Data cached - showing results for {formatSiteName(performanceData.site)} from {performanceData.startDate} to {performanceData.endDate}</span>
             </div>
           )}
         </div>
