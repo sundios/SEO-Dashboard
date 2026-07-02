@@ -62,8 +62,12 @@ dashboard_config.json
 client_secret.json
 client_secrets.json
 credentials.json
+gsc_client_secret.json
+trends_client_secret.json
 *.json.bak
 *.dat
+# Stray credential dump accidentally named as a single space
+[ ]
 
 # IDE
 .vscode/
