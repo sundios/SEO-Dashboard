@@ -64,6 +64,8 @@ client_secrets.json
 credentials.json
 *.json.bak
 *.dat
+# Stray OAuth credential dump accidentally named as a single space
+[ ]
 
 # IDE
 .vscode/

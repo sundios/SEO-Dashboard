@@ -1,6 +1,18 @@
 {
   "algo_updates": [
     {
+      "name": "June 2026 spam update",
+      "start_date": "2026-06-24",
+      "duration": "2 days, 1 hour",
+      "type": "spam"
+    },
+    {
+      "name": "May 2026 core update",
+      "start_date": "2026-05-21",
+      "duration": "11 days, 21 hours",
+      "type": "core"
+    },
+    {
       "name": "March 2026 core update",
       "start_date": "2026-03-27",
       "duration": "12 days, 4 hours",
