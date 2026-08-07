@@ -1,5 +1,5 @@
 flask==2.3.3
-flask-cors==4.0.0
+flask-cors==6.0.0
 pandas
 openai
 requests
